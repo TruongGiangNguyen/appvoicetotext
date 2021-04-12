@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    app:cardCornerRadius="8dp"
+    android:elevation="8dp">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="16dp">
+    <TextView
+        android:id="@+id/txt_date_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thu 5, Ngay 20 Thang 05"
+        android:textSize="14sp"
+        android:textColor="@color/black"/>
+
+    <RelativeLayout
+        android:id="@+id/item_rl_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_date_home"
+        android:layout_marginTop="6dp">
+        <ImageView
+            android:id="@+id/img_item_countHome"
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/ic_round_error_24" />
+        <TextView
+            android:id="@+id/txt_countNote_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20 ghi chu"
+            android:textSize="10sp"
+            android:layout_toRightOf="@id/img_item_countHome"
+            android:layout_marginLeft="8dp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_rl_home"
+        android:layout_marginTop="6dp"
+        android:layout_alignParentEnd="true">
+        <ImageView
+            android:id="@+id/img_item_timeHome"
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/ic_round_error_24" />
+        <TextView
+            android:id="@+id/txt_time_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="09:04 PM"
+            android:textSize="10sp"
+            android:layout_toRightOf="@id/img_item_timeHome"
+            android:layout_marginLeft="8dp"/>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>
