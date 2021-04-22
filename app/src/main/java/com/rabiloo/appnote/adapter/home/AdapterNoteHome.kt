@@ -23,7 +23,7 @@ class AdapterNoteHome(val context: Context, val items: ArrayList<ModelItemHome>)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHodel {
-        val view: View = LayoutInflater.from(parent.context).inflate(R.layout.item_home, parent, false)
+        val view: View = LayoutInflater.from(context).inflate(R.layout.item_home, parent, false)
         return ViewHodel(view)
     }
 

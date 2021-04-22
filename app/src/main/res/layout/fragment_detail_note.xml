@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="32dp">
+
+    <RelativeLayout
+        android:id="@+id/rl_fragmentNote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/back_listNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_baseline_west_24"
+            app:tint="@color/black"
+            android:layout_centerVertical="true"/>
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_note"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:searchIcon="@drawable/ic_round_error_24"
+            android:layout_toEndOf="@id/back_listNote"
+            android:layout_toStartOf="@id/more_listNote" />
+        <ImageView
+            android:id="@+id/more_listNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_baseline_more_vert_24"
+            app:tint="@color/black"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+</RelativeLayout>
