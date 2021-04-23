@@ -41,8 +41,10 @@ class ListNoteActivity: AppCompatActivity(), OpenDialogFragment {
         setContentView(R.layout.activity_list_note)
         initView()
         initRecycler()
-        testWebsocket()
+//        testWebsocket()
 //        testAPI()
+        val newFragment: DialogFragment = DetailNoteDialogFragment.newInstance()
+        newFragment.show(supportFragmentManager, "dialog")
     }
 
     fun testAPI(){

@@ -25,14 +25,14 @@
         </activity>
         <activity android:name="com.io.note.LoginActivity"/>
         <activity android:name="com.io.note.MainActivity">
+
+        </activity>
+        <activity android:name=".ListNoteActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".ListNoteActivity">
-
         </activity>
     </application>
 
