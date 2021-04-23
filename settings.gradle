@@ -1,2 +1,3 @@
+include ':librarysearch'
 include ':app'
 rootProject.name = "AppNote"

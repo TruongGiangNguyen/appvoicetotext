@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AppNote</string>
+    <string name="hint_search"><i>Search ...</i></string>
 </resources>

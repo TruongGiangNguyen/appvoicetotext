@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="toggle_recording_button_size">64dp</dimen>
+   <dimen name="toggle_recording_button_size">64dp</dimen>
+    <dimen name="done_recording_button_size">44dp</dimen>
+    <dimen name="fab_record_btn_size">45dp</dimen>
+
 </resources>

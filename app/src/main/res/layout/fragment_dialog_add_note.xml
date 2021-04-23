@@ -2,24 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="32dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/start_record"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="start"
-        android:visibility="gone"/>
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/stop_record"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="stop"
-        android:layout_alignParentEnd="true"
-        android:visibility="gone"/>
     <RelativeLayout
         android:id="@+id/rl_back"
         android:layout_width="wrap_content"
@@ -36,9 +20,15 @@
             android:layout_toEndOf="@id/back_addDialog"
             android:text="Back"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="3dp"
             android:textColor="@color/black"
             android:textSize="16sp"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0.02dp"
+            android:background="@color/black"
+            android:layout_below="@id/back_addDialog"
+            android:layout_marginTop="10dp"/>
     </RelativeLayout>
     <LinearLayout
         android:id="@+id/ll_titleTime"
@@ -46,11 +36,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_below="@id/rl_back"
-        android:layout_marginTop="5dp">
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="0.05dp"
-            android:background="@color/black"/>
+        android:padding="16dp">
         <TextView
             android:id="@+id/title_timeDate"
             android:layout_width="match_parent"
@@ -58,11 +44,10 @@
             android:text="09:56, Thu Nam, 22 Thang 04"
             android:textSize="20sp"
             android:textColor="@color/black"
-            android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"/>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="0.05dp"
+            android:layout_height="0.02dp"
             android:background="@color/black" />
     </LinearLayout>
     <LinearLayout
@@ -72,7 +57,7 @@
         android:layout_below="@+id/ll_titleTime"
         android:layout_above="@+id/toggle_recording_button"
         android:orientation="vertical"
-        android:layout_marginTop="5dp">
+        android:padding="16dp">
         <EditText
             android:id="@+id/edt_addNote"
             android:layout_width="match_parent"
@@ -113,7 +98,6 @@
         android:id="@+id/toggle_recording_button"
         android:layout_width="@dimen/toggle_recording_button_size"
         android:layout_height="@dimen/toggle_recording_button_size"
-        android:layout_weight="0.5"
         android:layout_marginBottom="@dimen/big_margin"
         android:background="@drawable/circle_background"
         android:elevation="@dimen/medium_margin"
@@ -121,4 +105,15 @@
         android:src="@drawable/ic_microphone_vector"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"/>
+    <ImageView
+        android:id="@+id/recording_done"
+        android:layout_width="@dimen/done_recording_button_size"
+        android:layout_height="@dimen/done_recording_button_size"
+        android:layout_marginBottom="@dimen/big_margin"
+        android:background="@drawable/circle_background"
+        android:padding="@dimen/normal_margin"
+        android:src="@drawable/ic_baseline_done_24"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:visibility="gone"/>
 </RelativeLayout>

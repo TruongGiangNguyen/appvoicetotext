@@ -1,5 +1,7 @@
 package com.rabiloo.appnote.fragment
 
+import android.R.attr.left
+import android.R.attr.right
 import android.app.Dialog
 import android.media.AudioFormat
 import android.media.AudioRecord
@@ -9,7 +11,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -25,7 +26,6 @@ import com.simplemobiletools.commons.extensions.getFormattedDuration
 import com.visualizer.amplitude.AudioRecordView
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame
 import io.netty.handler.codec.http.websocketx.WebSocketFrame
-import io.netty.util.CharsetUtil
 import kotlinx.coroutines.*
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -39,13 +39,18 @@ class AddNoteDialogFragment : DialogFragment() {
         }
     }
 
-    lateinit var start_record: Button
-    lateinit var stop_record: Button
     lateinit var recorder_visualizer: AudioRecordView
     lateinit var toggle_recording_button: ImageView
     lateinit var rl_back: RelativeLayout
     lateinit var txt_recording_duration: TextView
     lateinit var title_timeDate: TextView
+    lateinit var recording_done: ImageView
+    var height_statusBar: Int = 0
+    var streaming = true
+    var microphone: AudioRecord? = null
+    var ws: WebSocketClient? = null
+    var timer: Timer? = null
+    var isClick = "STOP"
     override fun onStart() {
         super.onStart()
         val dialog: Dialog? = dialog
@@ -64,6 +69,16 @@ class AddNoteDialogFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NORMAL, R.style.MY_DIALOG)
+        height_statusBar = getStatusBarHeight()
+
+    }
+    fun getStatusBarHeight(): Int {
+        var result = 0
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = resources.getDimensionPixelSize(resourceId)
+        }
+        return result
     }
 
     override fun onCreateView(
@@ -74,11 +89,6 @@ class AddNoteDialogFragment : DialogFragment() {
         return inflater.inflate(R.layout.fragment_dialog_add_note, container, false)
     }
 
-    var streaming = true
-    var microphone: AudioRecord? = null
-    var ws: WebSocketClient? = null
-    var timer: Timer? = null
-    var isClick = "STOP"
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView(view)
@@ -88,20 +98,22 @@ class AddNoteDialogFragment : DialogFragment() {
 
     fun initView(view: View) {
         rl_back = view.findViewById(R.id.rl_back)
+        val lp: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
+        lp.setMargins(0, height_statusBar, 0, 0)
+        rl_back.layoutParams = lp
+        recording_done = view.findViewById(R.id.recording_done)
         title_timeDate = view.findViewById(R.id.title_timeDate)
         toggle_recording_button = view.findViewById(R.id.toggle_recording_button)
         txt_recording_duration = view.findViewById(R.id.txt_recording_duration)
         recorder_visualizer = view.findViewById(R.id.recorder_visualizer)
         recorder_visualizer.recreate()
-        start_record = view.findViewById(R.id.start_record)
-        stop_record = view.findViewById(R.id.stop_record)
         val handler: IResponseHandler<WebSocketFrame?> = object :
                 IResponseHandler<WebSocketFrame?> {
             override fun onMessage(msg: WebSocketFrame?) {
                 if (msg is TextWebSocketFrame) {
                     val textFrame = msg as TextWebSocketFrame
                     val gson: Gson = Gson()
-                    val textWsAPI = gson.fromJson(textFrame.text() , Text::class.java)
+                    val textWsAPI = gson.fromJson(textFrame.text(), Text::class.java)
 //                    Log.d("WEBSOCKET", textFrame.text())
                     Log.d("WEBSOCKET", textWsAPI.result.hypotheses.last().transcript)
                 } else {
@@ -128,7 +140,15 @@ class AddNoteDialogFragment : DialogFragment() {
         rl_back.setOnClickListener {
             dialog?.dismiss()
         }
-        ws = WebSocketClient(generateQueryStringUri(KEY.URL_WEBSOCKET_API, 16000f, PCMFormat.S16LE, 1, KEY.TOKEN))
+        ws = WebSocketClient(
+            generateQueryStringUri(
+                KEY.URL_WEBSOCKET_API,
+                16000f,
+                PCMFormat.S16LE,
+                1,
+                KEY.TOKEN
+            )
+        )
         toggle_recording_button.setOnClickListener {
             isClick = if (isClick == "STOP"){
                 "RUN"
@@ -136,12 +156,13 @@ class AddNoteDialogFragment : DialogFragment() {
                 "STOP"
             }
             if (isClick == "RUN"){
+                recording_done.visibility = View.GONE
                 timer = Timer()
                 updateAudioVisualizer()
                 var duration: Int = 0
-                timer?.scheduleAtFixedRate(object : TimerTask(){
+                timer?.scheduleAtFixedRate(object : TimerTask() {
                     override fun run() {
-                        duration ++
+                        duration++
                         updateRecordingDuration(duration)
                     }
 
@@ -152,11 +173,21 @@ class AddNoteDialogFragment : DialogFragment() {
                     val channelConfig: Int = AudioFormat.CHANNEL_IN_MONO
                     val audioFormat: Int = AudioFormat.ENCODING_PCM_16BIT
                     try {
-                        var minBufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat)
+                        var minBufferSize = AudioRecord.getMinBufferSize(
+                            sampleRate,
+                            channelConfig,
+                            audioFormat
+                        )
                         if (minBufferSize == AudioRecord.ERROR || minBufferSize == AudioRecord.ERROR_BAD_VALUE) {
                             minBufferSize = sampleRate * 2;
                         }
-                        microphone = AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat, minBufferSize)
+                        microphone = AudioRecord(
+                            MediaRecorder.AudioSource.MIC,
+                            sampleRate,
+                            channelConfig,
+                            audioFormat,
+                            minBufferSize
+                        )
                         if (microphone?.state != AudioRecord.STATE_INITIALIZED) {
                             Log.e("AUDIO", "Audio Record can't initialize!");
                             return@launch
@@ -164,7 +195,7 @@ class AddNoteDialogFragment : DialogFragment() {
                         microphone?.startRecording()
                         while (streaming) {
                             try {
-                                val buffer = ByteArray(sampleRate * PCMFormat.S16LE.sampleSize / 16 ) // div 32 S16 16bit
+                                val buffer = ByteArray(sampleRate * PCMFormat.S16LE.sampleSize / 16) // div 32 S16 16bit
                                 microphone?.read(buffer, 0, buffer.size)
 //                            ws?.addHandler(handler)
 //                            ws?.sendBinaryMessage(buffer, 0, buffer.size)
@@ -182,28 +213,20 @@ class AddNoteDialogFragment : DialogFragment() {
                     }
                 }
             }else{
-                timer?.cancel()
-                ws?.sendBinaryMessage("EOS".toByteArray(CharsetUtil.UTF_8))
-                microphone?.stop()
-                microphone?.release()
+                streaming = false
+                if (ws != null && timer != null) {
+                    timer?.cancel()
+//                    ws?.sendBinaryMessage("EOS".toByteArray(CharsetUtil.UTF_8))
+                }
+                recording_done.visibility = View.VISIBLE
             }
 
-        }
-
-        stop_record.setOnClickListener {
-            streaming = false
-            if (microphone != null && ws != null && timer != null) {
-                timer?.cancel()
-                ws?.sendBinaryMessage("EOS".toByteArray(CharsetUtil.UTF_8))
-                microphone?.stop()
-                microphone?.release()
-            }
         }
     }
 
     fun updateAudioVisualizer() {
 //        val currentMaxAmplitude = MediaRecorder().getMediaRecorder().getMaxAmplitude()
-        timer?.scheduleAtFixedRate(object : TimerTask(){
+        timer?.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
                 recorder_visualizer.update((1000..8000).random())
             }
@@ -218,25 +241,25 @@ class AddNoteDialogFragment : DialogFragment() {
         val currentDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
         val nameDayEL = SimpleDateFormat("EEEE", Locale.getDefault()).format(Date())
         val nameDayVN = when(nameDayEL){
-            "Monday" ->{
+            "Monday" -> {
                 "Thu hai"
             }
-            "Tuesday" ->{
+            "Tuesday" -> {
                 "Thu ba"
             }
-            "Wednesday" ->{
+            "Wednesday" -> {
                 "Thu tu"
             }
-            "Thursday" ->{
+            "Thursday" -> {
                 "Thu nam"
             }
-            "Friday" ->{
+            "Friday" -> {
                 "Thu sau"
             }
-            "Saturday" ->{
+            "Saturday" -> {
                 "Thu bay"
             }
-            "Sunday" ->{
+            "Sunday" -> {
                 "Chu nhat"
             }
             else -> ""
@@ -244,7 +267,13 @@ class AddNoteDialogFragment : DialogFragment() {
         val currentTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
         title_timeDate.text = "$currentTime, $nameDayVN $currentDate"
     }
-    private fun generateQueryStringUri(url: String, sampleRate: Float, audioFormat: PCMFormat, channels: Int, token: String?, ): String {
+    private fun generateQueryStringUri(
+        url: String,
+        sampleRate: Float,
+        audioFormat: PCMFormat,
+        channels: Int,
+        token: String?
+    ): String {
         return "$url?content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)${sampleRate.toInt()},+format=(string)$audioFormat,+channels=(int)$channels&token=$token"
     }
 }
