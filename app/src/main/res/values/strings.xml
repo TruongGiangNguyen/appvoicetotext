@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">AppNote</string>
     <string name="hint_search"><i>Search ...</i></string>
+    <string name="undo_edit">Hoàn tác</string>
+    <string name="done_edit">Hoàn tất</string>
 </resources>

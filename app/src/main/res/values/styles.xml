@@ -17,4 +17,16 @@
         <item name="android:windowEnterAnimation">@anim/dialog_fragment_bot_to_top</item>
         <item name="android:windowExitAnimation">@anim/dialog_fragment_top_to_bot</item>
     </style>
+    //Roud bottom sheet dialog
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+    </style>
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+    <style name="AppModalStyle"
+        parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/round_dialog_bottom_sheet</item>
+    </style>
 </resources>
