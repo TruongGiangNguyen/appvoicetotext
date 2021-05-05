@@ -32,8 +32,7 @@ import java.time.LocalDate
 class ListNoteActivity: AppCompatActivity(), OpenDialogFragment {
     //Recycler
     lateinit var recy_listNote: RecyclerView
-    lateinit var txt_vm: TextView
-    lateinit var btn_vm: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         window.requestFeature(Window.FEATURE_ACTION_BAR)
         super.onCreate(savedInstanceState)
@@ -97,15 +96,7 @@ class ListNoteActivity: AppCompatActivity(), OpenDialogFragment {
 
     fun initView(){
         recy_listNote = findViewById(R.id.recy_listNote)
-        txt_vm = findViewById(R.id.txt_vm)
-        btn_vm = findViewById(R.id.btn_vm)
-        val coutListNoteActivity: CountListNoteActivity = ViewModelProvider(this).get(CountListNoteActivity::class.java)
 
-        txt_vm.text = coutListNoteActivity.count.toString()
-        btn_vm.setOnClickListener {
-            coutListNoteActivity.count += 1
-            txt_vm.text = coutListNoteActivity.count.toString()
-        }
     }
 
     fun initRecycler(){

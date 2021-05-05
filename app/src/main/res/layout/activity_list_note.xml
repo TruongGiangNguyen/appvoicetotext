@@ -38,26 +38,4 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/rl_listNote"
         android:layout_marginTop="@dimen/padd_10"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/recy_listNote">
-        <TextView
-            android:id="@+id/txt_vm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
-            android:textColor="@color/black"
-            android:text="12"
-            android:textSize="40dp"/>
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_vm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/txt_vm"
-            android:backgroundTint="@color/md_yellow_300_dark"
-            android:text="Up"/>
-    </RelativeLayout>
 </RelativeLayout>

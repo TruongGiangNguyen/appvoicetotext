@@ -145,7 +145,7 @@
         android:orientation="vertical"
         android:gravity="center"
         android:weightSum="10"
-        android:layout_above="@+id/toggle_recording_button">
+        android:layout_above="@+id/toggle_button">
         <RelativeLayout
             android:id="@+id/rl_txt"
             android:layout_width="match_parent"
@@ -196,30 +196,36 @@
                 android:layout_gravity="center"
                 android:backgroundTint="@color/main"
                 android:thumbTint="@color/main"
-                />
+                android:progressTint="@color/main"
+                android:max="0" />
             <TextView
                 android:id="@+id/txt_player_progress_max"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="10:00"
+                android:text="--:--"
                 android:maxLines="1"
                 android:gravity="center_vertical"
                 android:textColor="@color/black"
                 android:textSize="15sp"/>
         </LinearLayout>
     </LinearLayout>
-    <ImageView
-        android:id="@+id/toggle_recording_button"
-        android:layout_width="@dimen/toggle_recording_button_size"
-        android:layout_height="@dimen/toggle_recording_button_size"
-        android:layout_marginBottom="@dimen/big_margin"
-        android:background="@drawable/circle_background"
-        android:elevation="@dimen/medium_margin"
-        android:padding="@dimen/normal_margin"
-        android:src="@drawable/ic_play_vector"
+    <FrameLayout
+        android:id="@+id/toggle_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        />
+        android:layout_centerHorizontal="true">
+        <ImageView
+            android:id="@+id/toggle_play_button"
+            android:layout_width="@dimen/toggle_recording_button_size"
+            android:layout_height="@dimen/toggle_recording_button_size"
+            android:layout_marginBottom="@dimen/big_margin"
+            android:background="@drawable/circle_background"
+            android:elevation="@dimen/medium_margin"
+            android:padding="@dimen/normal_margin"
+            android:src="@drawable/ic_play_vector"
+            android:visibility="visible" />
+    </FrameLayout>
 </RelativeLayout>
 
