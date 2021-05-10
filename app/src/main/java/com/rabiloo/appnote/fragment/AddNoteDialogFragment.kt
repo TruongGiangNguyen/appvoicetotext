@@ -201,7 +201,7 @@ class AddNoteDialogFragment : DialogFragment() {
                         microphone?.startRecording()
                         while (streaming) {
                             try {
-                                val buffer = ByteArray(sampleRate * PCMFormat.S16LE.sampleSize / 16) // div 32 S16 16bit
+                                val buffer = ByteArray(sampleRate * PCMFormat.S16LE.sampleSize / 32) // div 32 S16 16bit
                                 var nRead: Int = 0
                                 ws?.addHandler(handler)
                                 while (microphone?.read(buffer, 0, buffer.size).also { if (it != null) { nRead = it } } !== -1) {
