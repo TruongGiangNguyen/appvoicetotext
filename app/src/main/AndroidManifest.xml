@@ -20,19 +20,19 @@
         android:usesCleartextTraffic="true"
         android:largeHeap="true">
 
-        <activity android:name="com.io.note.Splashcreen">
+        <activity android:name=".ui.Splashcreen">
 
         </activity>
-        <activity android:name="com.io.note.LoginActivity"/>
-        <activity android:name="com.io.note.MainActivity">
-
-        </activity>
-        <activity android:name=".ListNoteActivity">
+        <activity android:name=".ui.LoginActivity"/>
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".ui.ListNoteActivity">
+
         </activity>
     </application>
 

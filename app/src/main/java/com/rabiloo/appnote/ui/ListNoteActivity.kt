@@ -1,4 +1,4 @@
-package com.rabiloo.appnote
+package com.rabiloo.appnote.ui
 
 import android.content.res.AssetManager
 import android.graphics.Color
@@ -6,14 +6,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Window
-import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.io.note.key.KEY
+import com.rabiloo.appnote.R
 import com.rabiloo.appnote.adapter.note.AdapterNote
 import com.rabiloo.appnote.adapter.note.OpenDialogFragment
 import com.rabiloo.appnote.adapter.note.model.ModelItemNote
@@ -21,12 +19,10 @@ import com.rabiloo.appnote.fragment.DetailNoteDialogFragment
 import com.rabiloo.appnote.network.utils.PCMFormat
 import com.rabiloo.appnote.network.websocket.AsrWebSocketClient
 import com.rabiloo.appnote.network.websocket.IResponseHandler
-import com.rabiloo.appnote.viewmodel.CountListNoteActivity
 import com.vivian.timelineitemdecoration.itemdecoration.DotItemDecoration
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame
 import io.netty.handler.codec.http.websocketx.WebSocketFrame
 import java.io.*
-import java.time.LocalDate
 
 
 class ListNoteActivity: AppCompatActivity(), OpenDialogFragment {
@@ -80,7 +76,7 @@ class ListNoteActivity: AppCompatActivity(), OpenDialogFragment {
                 .setAudioFormat(PCMFormat.S16LE)
                 .setChannels(1)
                 .setHandler(handler)
-                .setToken(KEY.TOKEN)
+                .setToken(KEY.TOKEN_WEBSOCKET)
                 .setUrl(KEY.URL_WEBSOCKET_API)
                 .build()
             client.recognize(bi)

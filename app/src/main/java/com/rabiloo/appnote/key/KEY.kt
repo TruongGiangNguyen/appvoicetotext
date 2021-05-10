@@ -7,6 +7,6 @@ object KEY {
     val STORAGE = "gs://pushup-a2731.appspot.com/"
     val URL_WEBSOCKET_API = "wss://viettelgroup.ai/voice/api/asr/v1/ws/decode_online"
     val URL = "wss://vtcc.ai/voice/api/asr/v1/ws/decode_online"
-    val TOKEN = "set2y7FRRzYbnKA10DMzA-echRcMqqfZJV5fEKAgSBaNDpld0YcHV9qErTyxrKHz"
+    val TOKEN_WEBSOCKET = "ACb0objdvrkruw0-XwjGf31pxdTUmA9ZVkQgK7Nm1XOFbnQr68XkIIlZZGZO9mT9"
 
 }

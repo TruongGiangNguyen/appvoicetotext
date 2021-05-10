@@ -1,7 +1,5 @@
 package com.rabiloo.appnote.fragment
 
-import android.R.attr.left
-import android.R.attr.right
 import android.app.Dialog
 import android.media.AudioFormat
 import android.media.AudioRecord
@@ -11,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -26,6 +25,7 @@ import com.simplemobiletools.commons.extensions.getFormattedDuration
 import com.visualizer.amplitude.AudioRecordView
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame
 import io.netty.handler.codec.http.websocketx.WebSocketFrame
+import io.netty.util.CharsetUtil
 import kotlinx.coroutines.*
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -45,6 +45,8 @@ class AddNoteDialogFragment : DialogFragment() {
     lateinit var txt_recording_duration: TextView
     lateinit var title_timeDate: TextView
     lateinit var recording_done: ImageView
+    //Edittext note
+    private lateinit var edt_addNote: EditText
     var height_statusBar: Int = 0
     var streaming = true
     var microphone: AudioRecord? = null
@@ -103,6 +105,7 @@ class AddNoteDialogFragment : DialogFragment() {
         rl_back.layoutParams = lp
         recording_done = view.findViewById(R.id.recording_done)
         title_timeDate = view.findViewById(R.id.title_timeDate)
+        edt_addNote = view.findViewById(R.id.edt_addNote)
         toggle_recording_button = view.findViewById(R.id.toggle_recording_button)
         txt_recording_duration = view.findViewById(R.id.txt_recording_duration)
         recorder_visualizer = view.findViewById(R.id.recorder_visualizer)
@@ -114,7 +117,9 @@ class AddNoteDialogFragment : DialogFragment() {
                     val textFrame = msg as TextWebSocketFrame
                     val gson: Gson = Gson()
                     val textWsAPI = gson.fromJson(textFrame.text(), Text::class.java)
-//                    Log.d("WEBSOCKET", textFrame.text())
+                    CoroutineScope(Dispatchers.Main).launch {
+                        edt_addNote.setText(textWsAPI.result.hypotheses.last().transcript)
+                    }
                     Log.d("WEBSOCKET", textWsAPI.result.hypotheses.last().transcript)
                 } else {
                     Log.d("WEBSOCKET", msg.toString())
@@ -122,7 +127,7 @@ class AddNoteDialogFragment : DialogFragment() {
             }
 
             override fun onFailure(cause: Throwable?) {
-                Log.d("WEBSOCKET", "Fail - ${cause?.printStackTrace()}")
+                Log.d("WEBSOCKET", "Fail - ${cause?.message}")
             }
 
             override fun onComplete() {
@@ -146,7 +151,7 @@ class AddNoteDialogFragment : DialogFragment() {
                 16000f,
                 PCMFormat.S16LE,
                 1,
-                KEY.TOKEN
+                KEY.TOKEN_WEBSOCKET
             )
         )
         toggle_recording_button.setOnClickListener {
@@ -160,6 +165,7 @@ class AddNoteDialogFragment : DialogFragment() {
                 timer = Timer()
                 updateAudioVisualizer()
                 var duration: Int = 0
+                var fisrtStream = true
                 timer?.scheduleAtFixedRate(object : TimerTask() {
                     override fun run() {
                         duration++
@@ -196,10 +202,16 @@ class AddNoteDialogFragment : DialogFragment() {
                         while (streaming) {
                             try {
                                 val buffer = ByteArray(sampleRate * PCMFormat.S16LE.sampleSize / 16) // div 32 S16 16bit
-                                microphone?.read(buffer, 0, buffer.size)
-//                            ws?.addHandler(handler)
-//                            ws?.sendBinaryMessage(buffer, 0, buffer.size)
-                                delay(250)
+                                var nRead: Int = 0
+                                ws?.addHandler(handler)
+                                while (microphone?.read(buffer, 0, buffer.size).also { if (it != null) { nRead = it } } !== -1) {
+                                    ws?.sendBinaryMessage(buffer, 0, nRead)
+                                    delay(250)
+                                }
+//                                microphone?.read(buffer, 0, buffer.size)
+//                                ws?.addHandler(handler)
+//                                ws?.sendBinaryMessage(buffer, 0, buffer.size)
+//                                delay(250)
                             }catch (e: Exception){
                                 Log.d("TAG", e.message.toString())
                             }
@@ -209,14 +221,14 @@ class AddNoteDialogFragment : DialogFragment() {
                     } finally {
                         microphone?.stop()
                         microphone?.release()
-//                    ws?.sendBinaryMessage("EOS".toByteArray(CharsetUtil.UTF_8))
+                    ws?.sendBinaryMessage("EOS".toByteArray(CharsetUtil.UTF_8))
                     }
                 }
             }else{
                 streaming = false
                 if (ws != null && timer != null) {
                     timer?.cancel()
-//                    ws?.sendBinaryMessage("EOS".toByteArray(CharsetUtil.UTF_8))
+                    ws?.sendBinaryMessage("EOS".toByteArray(CharsetUtil.UTF_8))
                 }
                 recording_done.visibility = View.VISIBLE
             }

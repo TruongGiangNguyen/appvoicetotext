@@ -1,4 +1,4 @@
-package com.io.note
+package com.rabiloo.appnote.ui
 
 import android.graphics.Typeface
 import android.os.Bundle
