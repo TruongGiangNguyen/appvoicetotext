@@ -30,6 +30,7 @@ import kotlinx.coroutines.*
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class AddNoteDialogFragment : DialogFragment() {
@@ -53,6 +54,9 @@ class AddNoteDialogFragment : DialogFragment() {
     var ws: WebSocketClient? = null
     var timer: Timer? = null
     var isClick = "STOP"
+    var valueResponse: String = ""
+    var results: ArrayList<String> = ArrayList()
+    var duration: Int = 0
     override fun onStart() {
         super.onStart()
         val dialog: Dialog? = dialog
@@ -117,10 +121,12 @@ class AddNoteDialogFragment : DialogFragment() {
                     val textFrame = msg as TextWebSocketFrame
                     val gson: Gson = Gson()
                     val textWsAPI = gson.fromJson(textFrame.text(), Text::class.java)
+                    valueResponse = textWsAPI.result.hypotheses.last().transcript
+//                    results[duration] = valueResponse
                     CoroutineScope(Dispatchers.Main).launch {
-                        edt_addNote.setText(textWsAPI.result.hypotheses.last().transcript)
+                        edt_addNote.setText(valueResponse + "...")
                     }
-                    Log.d("WEBSOCKET", textWsAPI.result.hypotheses.last().transcript)
+                    Log.d("WEBSOCKET", valueResponse)
                 } else {
                     Log.d("WEBSOCKET", msg.toString())
                 }
@@ -164,7 +170,7 @@ class AddNoteDialogFragment : DialogFragment() {
                 recording_done.visibility = View.GONE
                 timer = Timer()
                 updateAudioVisualizer()
-                var duration: Int = 0
+
                 var fisrtStream = true
                 timer?.scheduleAtFixedRate(object : TimerTask() {
                     override fun run() {
@@ -204,9 +210,11 @@ class AddNoteDialogFragment : DialogFragment() {
                                 val buffer = ByteArray(sampleRate * PCMFormat.S16LE.sampleSize / 32) // div 32 S16 16bit
                                 var nRead: Int = 0
                                 ws?.addHandler(handler)
-                                while (microphone?.read(buffer, 0, buffer.size).also { if (it != null) { nRead = it } } !== -1) {
-                                    ws?.sendBinaryMessage(buffer, 0, nRead)
-                                    delay(250)
+                                    withContext(Dispatchers.IO) {
+                                        while (microphone?.read(buffer, 0, buffer.size).also { if (it != null) { nRead = it } } !== -1) {
+                                            ws?.sendBinaryMessage(buffer, 0, nRead)
+                                            delay(250)
+                                    }
                                 }
 //                                microphone?.read(buffer, 0, buffer.size)
 //                                ws?.addHandler(handler)
@@ -219,18 +227,18 @@ class AddNoteDialogFragment : DialogFragment() {
                     } catch (io: IOException) {
                         Log.d("IOException", io.printStackTrace().toString())
                     } finally {
-                        microphone?.stop()
-                        microphone?.release()
-                    ws?.sendBinaryMessage("EOS".toByteArray(CharsetUtil.UTF_8))
+                        ws?.sendBinaryMessage("EOS".toByteArray(CharsetUtil.UTF_8))
                     }
                 }
             }else{
                 streaming = false
-                if (ws != null && timer != null) {
+                ws?.sendBinaryMessage("EOS".toByteArray(CharsetUtil.UTF_8))
+                if (ws != null && timer != null && microphone != null) {
+                    microphone?.stop()
+                    microphone?.release()
                     timer?.cancel()
-                    ws?.sendBinaryMessage("EOS".toByteArray(CharsetUtil.UTF_8))
                 }
-                recording_done.visibility = View.VISIBLE
+//                recording_done.visibility = View.VISIBLE
             }
 
         }
