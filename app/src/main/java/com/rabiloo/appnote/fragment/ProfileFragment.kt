@@ -22,9 +22,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.io.note.LoginActivity
+import com.rabiloo.appnote.ui.LoginActivity
 import com.rabiloo.appnote.R
-import de.hdodenhof.circleimageview.CircleImageView
 
 
 class ProfileFragment: Fragment(), View.OnClickListener {

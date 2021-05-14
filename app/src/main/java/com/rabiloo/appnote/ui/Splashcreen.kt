@@ -1,4 +1,4 @@
-package com.io.note
+package com.rabiloo.appnote.ui
 
 import android.content.Intent
 import android.os.Bundle
