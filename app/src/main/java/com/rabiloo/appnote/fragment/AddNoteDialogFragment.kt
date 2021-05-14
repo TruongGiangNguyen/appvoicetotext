@@ -216,10 +216,6 @@ class AddNoteDialogFragment : DialogFragment() {
                                             delay(250)
                                     }
                                 }
-//                                microphone?.read(buffer, 0, buffer.size)
-//                                ws?.addHandler(handler)
-//                                ws?.sendBinaryMessage(buffer, 0, buffer.size)
-//                                delay(250)
                             }catch (e: Exception){
                                 Log.d("TAG", e.message.toString())
                             }
