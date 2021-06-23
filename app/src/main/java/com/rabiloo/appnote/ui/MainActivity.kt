@@ -1,8 +1,11 @@
 package com.rabiloo.appnote.ui
 
+import android.graphics.Color
 import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
 import android.view.Window
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
@@ -21,18 +24,23 @@ class MainActivity : AppCompatActivity() {
         window.requestFeature(Window.FEATURE_ACTION_BAR)
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
+
+        val window = window;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.statusBarColor = Color.TRANSPARENT; }
         setContentView(R.layout.activity_main)
 
         initView()
         configViewPager()
     }
 
-    fun initView(){
+    fun initView() {
         floating_top_bar_navigation = findViewById(R.id.floating_top_bar_navigation)
         view_pager = findViewById(R.id.view_pager)
     }
 
-    fun configViewPager(){
+    fun configViewPager() {
         floating_top_bar_navigation.setTypeface(Typeface.createFromAsset(assets, "rubik.ttf"))
         /*floating_top_bar_navigation.setBadgeValue(0, "")
         floating_top_bar_navigation.setBadgeValue(1, "") //invisible badge*/

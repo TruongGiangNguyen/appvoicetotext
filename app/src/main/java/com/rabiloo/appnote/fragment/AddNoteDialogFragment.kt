@@ -126,7 +126,9 @@ class AddNoteDialogFragment : DialogFragment() {
                     CoroutineScope(Dispatchers.Main).launch {
                         edt_addNote.setText(valueResponse + "...")
                     }
-                    Log.d("WEBSOCKET", valueResponse)
+                    textWsAPI.result.hypotheses.forEach {
+                        Log.d("WEBSOCKET", it.transcript)
+                    }
                 } else {
                     Log.d("WEBSOCKET", msg.toString())
                 }
@@ -227,16 +229,20 @@ class AddNoteDialogFragment : DialogFragment() {
                     }
                 }
             }else{
-                streaming = false
-                ws?.sendBinaryMessage("EOS".toByteArray(CharsetUtil.UTF_8))
-                if (ws != null && timer != null && microphone != null) {
-                    microphone?.stop()
-                    microphone?.release()
-                    timer?.cancel()
-                }
+                stop()
 //                recording_done.visibility = View.VISIBLE
             }
 
+        }
+    }
+
+    private fun stop(){
+        streaming = false
+        ws?.sendBinaryMessage("EOS".toByteArray(CharsetUtil.UTF_8))
+        if (ws != null && timer != null && microphone != null) {
+            microphone?.stop()
+            microphone?.release()
+            timer?.cancel()
         }
     }
 
