@@ -42,7 +42,6 @@ class ProfileFragment: Fragment() {
     private var speechRecognizer: SpeechRecognizer? = null
 
     private var btnListen: ImageButton? = null
-    private var layout_speech: FrameLayout? = null
     private var recognitionProgressView: RecognitionProgressView? = null
 
     var contacts: List<Contact>? = null
@@ -96,7 +95,6 @@ class ProfileFragment: Fragment() {
     fun initView(view: View){
         btnListen = view.findViewById(R.id.btnListen)
         recognitionProgressView = view.findViewById(R.id.recognition_view)
-        layout_speech = view.findViewById(R.id.layout_speech)
 
     }
 
