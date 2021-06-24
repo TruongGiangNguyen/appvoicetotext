@@ -6,6 +6,7 @@ import android.content.res.AssetFileDescriptor
 import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -254,7 +255,8 @@ class DetailNoteDialogFragment: DialogFragment(), MediaPlayer.OnCompletionListen
             mMediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
 
             val descriptor: AssetFileDescriptor = requireActivity().assets.openFd("audio1.mp3")
-            mMediaPlayer?.setDataSource(descriptor.fileDescriptor, descriptor.startOffset, descriptor.length)
+//            mMediaPlayer?.setDataSource(descriptor.fileDescriptor, descriptor.startOffset, descriptor.length)
+            mMediaPlayer?.setDataSource(requireContext(), Uri.parse("https://firebasestorage.googleapis.com/v0/b/havelunch-d9482.appspot.com/o/FILE_20210624_160339_audio.wav?alt=media&token=08160b5e-dd19-428b-8258-d6be3d31dcf4"))
             descriptor.close()
 
             mMediaPlayer?.prepare()

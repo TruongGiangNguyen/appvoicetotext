@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Window
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,8 @@ import com.io.note.fragment.NotiFragment
 import com.io.note.fragment.ProfileFragment
 import com.rabiloo.appnote.R
 import com.rabiloo.appnote.adapter.FragmentSlidePagerAdapter
+import com.rabiloo.appnote.utils.DateString
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
     private lateinit var floating_top_bar_navigation: BubbleNavigationConstraintView
@@ -33,6 +36,7 @@ class MainActivity : AppCompatActivity() {
 
         initView()
         configViewPager()
+        test()
     }
 
     fun initView() {
@@ -82,5 +86,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun test(){
+        val str = "ngày mười hai tháng mười một"
+        val day = DateString.getDayOrMonth(str, DateString.day)
+        val month = DateString.getDayOrMonth(str, DateString.month)
+        val date = DateString.getDate(day, month)
+        val dayOfWeek = DateString.getDayofWeek(date)
+        val dayFull = DateString.getDateFull(dayOfWeek, day, month)
+
+    }
 
 }

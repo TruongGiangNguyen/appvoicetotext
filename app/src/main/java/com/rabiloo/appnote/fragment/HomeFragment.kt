@@ -23,6 +23,7 @@ import com.rabiloo.appnote.adapter.home.AdapterNoteHome
 import com.rabiloo.appnote.adapter.home.model.ModelItemHome
 import com.rabiloo.appnote.datepickerdialog.DatePicker
 import com.rabiloo.appnote.fragment.AddNoteDialogFragment
+import com.rabiloo.appnote.fragment.DetailNoteDialogFragment
 import kotlin.collections.ArrayList
 
 class HomeFragment : Fragment(), View.OnClickListener{
@@ -58,6 +59,8 @@ class HomeFragment : Fragment(), View.OnClickListener{
             editor.commit()
         }
 
+       /* val newFragment: DialogFragment = DetailNoteDialogFragment.newInstance()
+        newFragment.show(requireActivity().supportFragmentManager, "dialog")*/
     }
 
     override fun onResume() {

@@ -5,14 +5,12 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.DialogFragment
 import com.google.gson.Gson
 import com.io.note.key.KEY
@@ -27,11 +25,11 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame
 import io.netty.handler.codec.http.websocketx.WebSocketFrame
 import io.netty.util.CharsetUtil
 import kotlinx.coroutines.*
+import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-
 
 class AddNoteDialogFragment : DialogFragment() {
     companion object {
@@ -46,6 +44,7 @@ class AddNoteDialogFragment : DialogFragment() {
     lateinit var txt_recording_duration: TextView
     lateinit var title_timeDate: TextView
     lateinit var recording_done: ImageView
+
     //Edittext note
     private lateinit var edt_addNote: EditText
     var height_statusBar: Int = 0
@@ -57,6 +56,8 @@ class AddNoteDialogFragment : DialogFragment() {
     var valueResponse: String = ""
     var results: ArrayList<String> = ArrayList()
     var duration: Int = 0
+    var recorder: MediaRecorder? = null
+
     override fun onStart() {
         super.onStart()
         val dialog: Dialog? = dialog
@@ -78,6 +79,7 @@ class AddNoteDialogFragment : DialogFragment() {
         height_statusBar = getStatusBarHeight()
 
     }
+
     fun getStatusBarHeight(): Int {
         var result = 0
         val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
@@ -104,7 +106,10 @@ class AddNoteDialogFragment : DialogFragment() {
 
     fun initView(view: View) {
         rl_back = view.findViewById(R.id.rl_back)
-        val lp: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
+        val lp: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.WRAP_CONTENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
+        )
         lp.setMargins(0, height_statusBar, 0, 0)
         rl_back.layoutParams = lp
         recording_done = view.findViewById(R.id.recording_done)
@@ -114,21 +119,44 @@ class AddNoteDialogFragment : DialogFragment() {
         txt_recording_duration = view.findViewById(R.id.txt_recording_duration)
         recorder_visualizer = view.findViewById(R.id.recorder_visualizer)
         recorder_visualizer.recreate()
+
         val handler: IResponseHandler<WebSocketFrame?> = object :
-                IResponseHandler<WebSocketFrame?> {
+            IResponseHandler<WebSocketFrame?> {
             override fun onMessage(msg: WebSocketFrame?) {
                 if (msg is TextWebSocketFrame) {
                     val textFrame = msg as TextWebSocketFrame
                     val gson: Gson = Gson()
                     val textWsAPI = gson.fromJson(textFrame.text(), Text::class.java)
                     valueResponse = textWsAPI.result.hypotheses.last().transcript
-//                    results[duration] = valueResponse
                     CoroutineScope(Dispatchers.Main).launch {
+                        /* val handler = Handler()
+                         var count = 0
+                         val runnable: Runnable = object : Runnable {
+                             override fun run() {
+                                 // need to do tasks on the UI thread
+                                 if (results.isEmpty()){
+                                     results.add(valueResponse)
+                                 }else{
+                                     results.forEach loop@{
+                                         if (!it.contains(valueResponse)){
+                                             results.add(valueResponse);
+                                             return@loop
+                                         }
+                                     }
+                                 }
+
+                                 if (count++ < 2) {
+                                     handler.postDelayed(this, 2000)
+                                 }
+                             }
+                         }
+                         handler.post(runnable);*/
                         edt_addNote.setText(valueResponse + "...")
                     }
                     textWsAPI.result.hypotheses.forEach {
                         Log.d("WEBSOCKET", it.transcript)
                     }
+
                 } else {
                     Log.d("WEBSOCKET", msg.toString())
                 }
@@ -163,12 +191,14 @@ class AddNoteDialogFragment : DialogFragment() {
             )
         )
         toggle_recording_button.setOnClickListener {
-            isClick = if (isClick == "STOP"){
+            isClick = if (isClick == "STOP") {
                 "RUN"
-            }else{
+            } else {
                 "STOP"
             }
-            if (isClick == "RUN"){
+            if (isClick == "RUN") {
+                audioRecording()
+                results.clear()
                 recording_done.visibility = View.GONE
                 timer = Timer()
                 updateAudioVisualizer()
@@ -209,16 +239,21 @@ class AddNoteDialogFragment : DialogFragment() {
                         microphone?.startRecording()
                         while (streaming) {
                             try {
-                                val buffer = ByteArray(sampleRate * PCMFormat.S16LE.sampleSize / 32) // div 32 S16 16bit
+                                val buffer =
+                                    ByteArray(sampleRate * PCMFormat.S16LE.sampleSize / 32) // div 32 S16 16bit
                                 var nRead: Int = 0
                                 ws?.addHandler(handler)
-                                    withContext(Dispatchers.IO) {
-                                        while (microphone?.read(buffer, 0, buffer.size).also { if (it != null) { nRead = it } } !== -1) {
-                                            ws?.sendBinaryMessage(buffer, 0, nRead)
-                                            delay(250)
+                                withContext(Dispatchers.IO) {
+                                    while (microphone?.read(buffer, 0, buffer.size).also {
+                                            if (it != null) {
+                                                nRead = it
+                                            }
+                                        } !== -1) {
+                                        ws?.sendBinaryMessage(buffer, 0, nRead)
+                                        delay(250)
                                     }
                                 }
-                            }catch (e: Exception){
+                            } catch (e: Exception) {
                                 Log.d("TAG", e.message.toString())
                             }
                         }
@@ -228,15 +263,16 @@ class AddNoteDialogFragment : DialogFragment() {
                         ws?.sendBinaryMessage("EOS".toByteArray(CharsetUtil.UTF_8))
                     }
                 }
-            }else{
+            } else {
                 stop()
+                stopRecording()
 //                recording_done.visibility = View.VISIBLE
             }
 
         }
     }
 
-    private fun stop(){
+    private fun stop() {
         streaming = false
         ws?.sendBinaryMessage("EOS".toByteArray(CharsetUtil.UTF_8))
         if (ws != null && timer != null && microphone != null) {
@@ -255,40 +291,42 @@ class AddNoteDialogFragment : DialogFragment() {
 
         }, 0, 60)
     }
+
     private fun updateRecordingDuration(duration: Int) {
         txt_recording_duration.text = duration.getFormattedDuration()
     }
 
-    fun updateTimeDate(){
+    fun updateTimeDate() {
         val currentDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
         val nameDayEL = SimpleDateFormat("EEEE", Locale.getDefault()).format(Date())
-        val nameDayVN = when(nameDayEL){
+        val nameDayVN = when (nameDayEL) {
             "Monday" -> {
-                "Thu hai"
+                "Thứ hai"
             }
             "Tuesday" -> {
-                "Thu ba"
+                "Thứ ba"
             }
             "Wednesday" -> {
-                "Thu tu"
+                "Thứ tư"
             }
             "Thursday" -> {
-                "Thu nam"
+                "Thứ năm"
             }
             "Friday" -> {
-                "Thu sau"
+                "Thứ sáu"
             }
             "Saturday" -> {
-                "Thu bay"
+                "Thứ bảy"
             }
             "Sunday" -> {
-                "Chu nhat"
+                "Chủ nhật"
             }
             else -> ""
         }
         val currentTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
         title_timeDate.text = "$currentTime, $nameDayVN $currentDate"
     }
+
     private fun generateQueryStringUri(
         url: String,
         sampleRate: Float,
@@ -298,4 +336,33 @@ class AddNoteDialogFragment : DialogFragment() {
     ): String {
         return "$url?content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)${sampleRate.toInt()},+format=(string)$audioFormat,+channels=(int)$channels&token=$token"
     }
+
+    fun audioRecording() {
+        val file: File = File(requireContext().getExternalFilesDir(null)?.absolutePath)
+        val myappFile = File(file, "audio.wav")
+        if (!file.exists()) {
+            file.mkdirs()
+        }
+
+        recorder = MediaRecorder()
+        recorder?.apply {
+            setAudioSource(MediaRecorder.AudioSource.MIC)
+            setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+            setOutputFile(myappFile.absolutePath)
+
+            prepare()
+            start()
+        }
+    }
+
+    private fun stopRecording() {
+        // stop recording and free up resources
+        recorder?.apply {
+            stop()
+            release()
+            recorder = null
+        }
+    }
+
 }
