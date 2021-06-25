@@ -1,49 +1,41 @@
 {
   "project_info": {
-    "project_number": "1027829517682",
-    "project_id": "pushup-21b49",
-    "storage_bucket": "pushup-21b49.appspot.com"
+    "project_number": "527002819633",
+    "project_id": "appnote-97c4b",
+    "storage_bucket": "appnote-97c4b.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1027829517682:android:ad6566d40e95fcb7c961eb",
+        "mobilesdk_app_id": "1:527002819633:android:29b22e576629df756a8910",
         "android_client_info": {
           "package_name": "com.rabiloo.appnote"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1027829517682-4kb5hnc0crn5vgbnd75tvfb9f1o6bfud.apps.googleusercontent.com",
+          "client_id": "527002819633-s8ivbc7dnrr3h8pnd4shrca2r0k2toco.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.rabiloo.appnote",
-            "certificate_hash": "f3ab0fdf9371142e517779c200e3fa9e01372f28"
+            "certificate_hash": "5944629ef3cea4092af530af465fa7571084da4e"
           }
         },
         {
-          "client_id": "1027829517682-pu1u55t5cmr8duia4ctqsn6htvq3jlmp.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.rabiloo.appnote",
-            "certificate_hash": "17698fcd711c4a2bba7f0f983c51e2ca0aced2b1"
-          }
-        },
-        {
-          "client_id": "1027829517682-2dj0u4dpcv1csi0gtdlldprk11dfauvq.apps.googleusercontent.com",
+          "client_id": "527002819633-89i9mccs98oj1urqccbdsdfrcin20j6v.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDcrnQa2unDdVMc7PyOSJ5EPvisuqVbzMo"
+          "current_key": "AIzaSyBQ6w3NisXV_z6auYF90fn-0RzOIGLKL7Y"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1027829517682-2dj0u4dpcv1csi0gtdlldprk11dfauvq.apps.googleusercontent.com",
+              "client_id": "527002819633-89i9mccs98oj1urqccbdsdfrcin20j6v.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

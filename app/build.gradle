@@ -11,7 +11,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.rabiloo.appnote"
+        applicationId "com.rabiloo.appnote123"
         minSdkVersion 26
         targetSdkVersion 30
         versionCode 1
@@ -77,7 +77,8 @@ dependencies {
     //Frire Storage
     implementation 'com.google.firebase:firebase-storage:19.2.2'
     //Fire Cloud
-    implementation 'com.google.firebase:firebase-firestore:22.1.2'
+    implementation 'com.google.firebase:firebase-firestore:23.0.1'
+    implementation 'com.google.firebase:firebase-firestore-ktx'
     //Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3'

@@ -36,11 +36,13 @@
         <TextView
             android:id="@+id/txt_countNote_home"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="16dp"
             android:text="20 ghi chu"
             android:textSize="10sp"
             android:layout_toRightOf="@id/img_item_countHome"
-            android:layout_marginLeft="8dp"/>
+            android:layout_marginLeft="8dp"
+            android:textColor="@color/black"
+            android:gravity="center"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -62,7 +64,8 @@
             android:text="09:04 PM"
             android:textSize="10sp"
             android:layout_toRightOf="@id/img_item_timeHome"
-            android:layout_marginLeft="8dp"/>
+            android:layout_marginLeft="8dp"
+            android:textColor="@color/black"/>
 
     </RelativeLayout>
 
