@@ -2,6 +2,8 @@ package com.rabiloo.appnote123.ui
 
 import android.graphics.Color
 import android.graphics.Typeface
+import android.icu.util.Calendar
+import android.net.ParseException
 import android.os.Build
 import android.os.Bundle
 import android.view.Window
@@ -10,13 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.gauravk.bubblenavigation.BubbleNavigationConstraintView
-import com.io.note.fragment.HomeFragment
 import com.io.note.fragment.NotiFragment
 import com.io.note.fragment.ProfileFragment
 import com.rabiloo.appnote123.R
 import com.rabiloo.appnote123.adapter.FragmentSlidePagerAdapter
-import com.rabiloo.appnote123.key.KEY
-import com.rabiloo.appnote123.utils.DateString
+import com.rabiloo.appnote123.fragment.HomeFragment
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
@@ -96,14 +98,15 @@ class MainActivity : AppCompatActivity() {
         val dayOfWeek = DateString.getDayofWeek(date)*//*
         val dayFull = DateString.getDateYear(day, month, year)
         println(dayFull)*/
-        val str = "ngày 1 tháng 6"
+       /* val str = "ngày 1 tháng 6"
         val day = DateString.getDayOrMonthVoiceGG(str, DateString.day)
         val month = DateString.getDayOrMonthVoiceGG(str, DateString.month)
         val dayFull = DateString.getDate(day, month)
         if (day.toInt() < 10){
             val d = "0$day"
             println(d)
-        }
+        }*/
+
     }
 
 }

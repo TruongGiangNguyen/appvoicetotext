@@ -1,6 +1,7 @@
 package com.rabiloo.appnote123.utils
 
 import android.icu.util.Calendar
+import android.net.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -76,7 +77,8 @@ object DateString {
     }
 
     fun getDate(day: String, month: String): String{
-        return "$day/$month/2021"
+        val year = Calendar.getInstance().get(Calendar.YEAR)
+        return "$day/$month/${year.toString()}"
     }
 
     fun getDateYear(day: String, month: String, year: String): String{
@@ -103,6 +105,17 @@ object DateString {
             7 -> return "Thứ bảy"
             else -> return "-1"
         }
+
+        /*val aTime = "27-06-2021"
+        val sdf = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+        try {
+            val cal = Calendar.getInstance()
+            cal.time = sdf.parse(aTime)
+            val nameDayEL = SimpleDateFormat("EEEE", Locale.getDefault()).format(Date(cal.timeInMillis))
+            println(nameDayEL)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }*/
     }
 
     fun hashMapDate(): HashMap<String, String>{
@@ -111,5 +124,21 @@ object DateString {
             hashMap.put(dateArrStr[i],dateArrNumber[i])
         }
         return hashMap
+    }
+
+    fun getDateTomorrow(): String{
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, 1)
+        val tomorrow: Date = calendar.time
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy")
+        return dateFormat.format(tomorrow)
+    }
+
+    fun getDateAfterTomorrow(): String{
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, 2)
+        val t: Date = calendar.time
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy")
+        return dateFormat.format(t)
     }
 }

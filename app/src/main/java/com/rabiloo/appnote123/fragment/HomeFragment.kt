@@ -1,4 +1,4 @@
-package com.io.note.fragment
+package com.rabiloo.appnote123.fragment
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -29,7 +29,6 @@ import com.rabiloo.appnote123.R
 import com.rabiloo.appnote123.adapter.home.AdapterNoteHome
 import com.rabiloo.appnote123.adapter.home.model.ModelItemHome
 import com.rabiloo.appnote123.datepickerdialog.DatePicker
-import com.rabiloo.appnote123.fragment.AddNoteDialogFragment
 import com.rabiloo.appnote123.key.KEY
 import com.rabiloo.appnote123.listener.ItemNoteHomeListener
 import com.rabiloo.appnote123.model.DetailNote
@@ -120,7 +119,7 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
             .addOnSuccessListener { result ->
                 for (document in result) {
                     val note = document.toObject(Note::class.java)
-                    val nameDayEL = SimpleDateFormat("EEEE", Locale.getDefault()).format(Date(note.date))
+                    val nameDayEL = DateString.getDayofWeek(note.date)
                     val date = "$nameDayEL, Ngày ${note.date}"
                     val mItem = ModelItemHome(note.idNote, date, note.timeCreate, note.coutNote)
                     items.add(mItem)

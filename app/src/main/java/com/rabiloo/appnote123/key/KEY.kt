@@ -1,6 +1,11 @@
 package com.rabiloo.appnote123.key
 
 object KEY {
+    val TOMORROW = "ngày mai"
+    val DAYAFTERTOMORROW = "ngày kia"
+    val DAYAFTERTOMORROR1 = "ngày mốt"
+    val DAY = "ngày"
+    val MONTH = "tháng"
     val COUTNOTE = "COUTNOTE"
     val DATE = "DATENOTE"
     val ID = "IDNOTE"

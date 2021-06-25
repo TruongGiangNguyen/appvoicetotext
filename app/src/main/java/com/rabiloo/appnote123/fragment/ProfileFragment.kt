@@ -29,7 +29,7 @@ import java.util.*
 import java.util.regex.Pattern
 
 
-class ProfileFragment: Fragment() {
+class ProfileFragment : Fragment() {
     private val permissions = arrayOf(
         Manifest.permission.INTERNET,
         Manifest.permission.RECORD_AUDIO,
@@ -50,7 +50,11 @@ class ProfileFragment: Fragment() {
 
     private var isRecognitionSpeech = false
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         val inflatedView = inflater.inflate(R.layout.fragment_profile, container, false)
         return inflatedView
@@ -60,9 +64,8 @@ class ProfileFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         requestPermission()
 
-       /* initView(view)
-        init()
-        onClick()*/
+        initView(view)
+        onClick()
     }
 
     /**
@@ -72,7 +75,11 @@ class ProfileFragment: Fragment() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val remainingPermissions: MutableList<String> = ArrayList()
             for (permission in permissions) {
-                if (checkSelfPermission(requireContext(),permission) !== android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                if (checkSelfPermission(
+                        requireContext(),
+                        permission
+                    ) !== android.content.pm.PackageManager.PERMISSION_GRANTED
+                ) {
                     remainingPermissions.add(permission)
                 }
             }
@@ -82,35 +89,37 @@ class ProfileFragment: Fragment() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 101) {
             for (i in grantResults.indices) {
                 if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                 }
             }
-            //all is good, continue flow
+            init()
         }
     }
 
-    fun initView(view: View){
+    fun initView(view: View) {
         btnListen = view.findViewById(R.id.btnListen)
         recognitionProgressView = view.findViewById(R.id.recognition_view)
 
     }
 
-    fun init(){
+    fun init() {
         contacts = GetContactsIntoArrayList()
         apps = getAllApplicationInPhone()
-
         isRecognitionSpeech = true
-
         setUiRecognition()
-
     }
 
-    fun onClick(){
-        btnListen!!.setOnClickListener { startRecognition() }
+    fun onClick() {
+        btnListen!!.setOnClickListener {
+            startRecognition() }
     }
 
     private fun startRecognition() {
@@ -236,7 +245,7 @@ class ProfileFragment: Fragment() {
         } else if (text.contains("mở")) {
             // Lauching application
             app(text)
-        }else {
+        } else {
             search_google(text)
         }
     }
@@ -383,7 +392,11 @@ class ProfileFragment: Fragment() {
 //                    )
 //                )
 //            )
-            Toast.makeText(requireContext(), "Ứng dụng không tồn tại, vui lòng thử lại.", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                requireContext(),
+                "Ứng dụng không tồn tại, vui lòng thử lại.",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 

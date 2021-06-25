@@ -16,24 +16,24 @@
     <application
         android:name="com.rabiloo.appnote123.realmDB.MyApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_microphone"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_microphone"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppNote"
         android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true"
         android:largeHeap="true">
 
-        <activity android:name="com.rabiloo.appnote123.ui.Splashcreen">
-
-        </activity>
-        <activity android:name="com.rabiloo.appnote123.ui.LoginActivity">
+        <activity android:name="com.rabiloo.appnote123.ui.Splashcreen"
+            android:theme="@style/SplashscreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name="com.rabiloo.appnote123.ui.LoginActivity">
         </activity>
         <activity android:name="com.rabiloo.appnote123.ui.MainActivity">
         </activity>

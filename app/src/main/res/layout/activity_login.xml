@@ -4,16 +4,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/main">
 
     <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:srcCompat="@drawable/login"
-            android:scaleType="centerCrop"/>
+            android:scaleType="fitXY"/>
     </FrameLayout>
 
     <LinearLayout
@@ -31,8 +31,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/gotham"
-                android:text="Push "
-                android:textColor="#ffffff"
+                android:text="Voice "
+                android:textColor="@color/white"
                 android:textSize="32sp" />
         </LinearLayout>
 
@@ -47,14 +47,14 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:fontFamily="@font/gotham"
-                android:text="Up"
-                android:textColor="#ffffff"
+                android:text="Note"
+                android:textColor="@color/black"
                 android:textSize="32sp" />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_marginTop="2dp"
-                android:background="#deff00" />
+                android:background="@color/white" />
         </LinearLayout>
     </LinearLayout>
     <TextView
@@ -65,8 +65,8 @@
         android:layout_marginTop="4dp"
         android:fontFamily="@font/calibri"
         android:gravity="center"
-        android:text="Cuối tháng nhậu"
-       android:textColor="#9affffff"
+        android:text="Đơn giản, nhanh chóng"
+       android:textColor="@color/black"
         android:textSize="15sp" />
 
     <com.shaishavgandhi.loginbuttons.GoogleButton
@@ -80,7 +80,7 @@
         android:layout_height="wrap_content"
         app:transparentBackground="true"
         android:textColor="@color/white"
-        app:backgroundTint="@color/red_inactive"
+        app:backgroundTint="@color/white"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="50dp"/>
 
@@ -98,6 +98,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         style="@style/SpinKitView.Small.ThreeBounce"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        app:SpinKit_Color="@color/main"/>
 
 </RelativeLayout>
