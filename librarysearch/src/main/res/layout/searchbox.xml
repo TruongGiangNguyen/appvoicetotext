@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <io.codetailps.widget.RevealFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:id="@+id/searchbox_rfl"
     android:layout_height="wrap_content">
+    <RelativeLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_search"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/mic"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:onClick="mic"
+            android:src="@drawable/ic_baseline_mic_24_lib" />
+    </RelativeLayout>
+
+
     <RelativeLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -11,8 +27,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_search"
-        android:orientation="vertical" >
-
+        android:orientation="vertical"
+        android:visibility="gone">
         <ListView
             android:id="@+id/results"
             android:layout_width="match_parent"
@@ -35,7 +51,6 @@
                 android:layout_alignBottom="@+id/material_menu_button"
                 android:layout_alignParentTop="true"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/mic"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="54dp"
                 android:singleLine="true"
@@ -43,6 +58,7 @@
                 tools:text="Logo"
                 android:textColor="#212121"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
+<!--            android:layout_toLeftOf="@+id/mic"-->
 
             <EditText
                 android:id="@+id/search"
@@ -62,7 +78,7 @@
                 <requestFocus />
             </EditText>
 
-            <ImageView
+            <!--<ImageView
                 android:id="@+id/mic"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
@@ -72,7 +88,7 @@
                 android:layout_alignWithParentIfMissing="true"
                 android:onClick="mic"
                 android:layout_marginRight="13dp"
-                android:src="@drawable/ic_baseline_mic_24_lib" />
+                android:src="@drawable/ic_baseline_mic_24_lib" -->
 
             <ImageView
                 android:id="@+id/overflow"
@@ -102,8 +118,8 @@
                 android:layout_alignBottom="@+id/material_menu_button"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:layout_toLeftOf="@+id/mic"
                 android:layout_marginRight="13dp"/>
+<!--            android:layout_toLeftOf="@+id/mic"-->
 
             <ImageView
                 android:id="@+id/drawer_logo"

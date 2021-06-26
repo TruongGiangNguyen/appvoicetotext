@@ -1,9 +1,8 @@
 package com.rabiloo.appnote123.ui
 
+import android.app.ProgressDialog
 import android.graphics.Color
 import android.graphics.Typeface
-import android.icu.util.Calendar
-import android.net.ParseException
 import android.os.Build
 import android.os.Bundle
 import android.view.Window
@@ -12,12 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.gauravk.bubblenavigation.BubbleNavigationConstraintView
-import com.io.note.fragment.NotiFragment
 import com.io.note.fragment.ProfileFragment
 import com.rabiloo.appnote123.R
 import com.rabiloo.appnote123.adapter.FragmentSlidePagerAdapter
 import com.rabiloo.appnote123.fragment.HomeFragment
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -30,11 +27,6 @@ class MainActivity : AppCompatActivity() {
         window.requestFeature(Window.FEATURE_ACTION_BAR)
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
-
-        val window = window;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.statusBarColor = Color.TRANSPARENT; }
         setContentView(R.layout.activity_main)
 
         initView()
@@ -55,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         val fragList = ArrayList<Fragment>()
         fragList.add(HomeFragment())
         fragList.add(ProfileFragment())
-        fragList.add(NotiFragment())
+//        fragList.add(NotiFragment())
 
         val pagerAdapter = FragmentSlidePagerAdapter(fragList, supportFragmentManager)
         view_pager.adapter = pagerAdapter

@@ -54,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
         window.requestFeature(Window.FEATURE_ACTION_BAR)
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
-        statusbarTransparent()
+//        statusbarTransparent()
         setContentView(R.layout.activity_login)
         // Initialize Firebase Auth
         auth = Firebase.auth

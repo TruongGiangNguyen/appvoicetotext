@@ -140,8 +140,8 @@ class DetailNoteDialogFragment: DialogFragment(), MediaPlayer.OnCompletionListen
         seekbar = view.findViewById(R.id.txt_player_seekbar)
 
         if (dDate != ""){
-            title_timeDate_detail.text = "$dTime, Ngày $dDate"
-            edit_timeDate_detail.setText("$dTime, Ngày $dDate")
+            title_timeDate_detail.text = "Ngày $dDate"
+            edit_timeDate_detail.setText("Ngày $dDate")
 
         }else{
             title_timeDate_detail.text = dTime

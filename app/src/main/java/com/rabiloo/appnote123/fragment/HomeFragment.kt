@@ -30,6 +30,7 @@ import com.rabiloo.appnote123.adapter.home.AdapterNoteHome
 import com.rabiloo.appnote123.adapter.home.model.ModelItemHome
 import com.rabiloo.appnote123.datepickerdialog.DatePicker
 import com.rabiloo.appnote123.key.KEY
+import com.rabiloo.appnote123.listener.CallFunctionListener
 import com.rabiloo.appnote123.listener.ItemNoteHomeListener
 import com.rabiloo.appnote123.model.DetailNote
 import com.rabiloo.appnote123.model.Note
@@ -363,4 +364,5 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
                 Toast.makeText(requireContext(), "Dữ liệu tìm kiếm bị lỗi", Toast.LENGTH_LONG).show()
             }
     }
+
 }

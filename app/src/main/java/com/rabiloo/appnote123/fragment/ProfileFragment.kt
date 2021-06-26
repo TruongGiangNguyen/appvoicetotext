@@ -22,9 +22,16 @@ import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import com.github.zagum.speechrecognitionview.RecognitionProgressView
 import com.github.zagum.speechrecognitionview.adapters.RecognitionListenerAdapter
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseAuth
 import com.rabiloo.appnote123.R
+import com.rabiloo.appnote123.key.KEY
 import com.rabiloo.appnote123.model.feature.Application
 import com.rabiloo.appnote123.model.feature.Contact
+import com.rabiloo.appnote123.ui.LoginActivity
+import com.shaishavgandhi.loginbuttons.GoogleButton
 import java.util.*
 import java.util.regex.Pattern
 
@@ -44,6 +51,7 @@ class ProfileFragment : Fragment() {
 
     private var btnListen: ImageButton? = null
     private var recognitionProgressView: RecognitionProgressView? = null
+    private lateinit var signOutGg: GoogleButton
 
     var contacts: List<Contact>? = null
     var apps: List<Application>? = null
@@ -62,10 +70,9 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requestPermission()
-
         initView(view)
         onClick()
+        requestPermission()
     }
 
     /**
@@ -85,6 +92,8 @@ class ProfileFragment : Fragment() {
             }
             if (remainingPermissions.size > 0) {
                 requestPermissions(remainingPermissions.toTypedArray(), 101)
+            }else{
+               init()
             }
         }
     }
@@ -100,13 +109,13 @@ class ProfileFragment : Fragment() {
                 if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                 }
             }
-            init()
         }
     }
 
     fun initView(view: View) {
         btnListen = view.findViewById(R.id.btnListen)
         recognitionProgressView = view.findViewById(R.id.recognition_view)
+        signOutGg = view.findViewById(R.id.sign_out_gg)
 
     }
 
@@ -120,6 +129,19 @@ class ProfileFragment : Fragment() {
     fun onClick() {
         btnListen!!.setOnClickListener {
             startRecognition() }
+
+        signOutGg.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            val mGoogleSignInClient: GoogleSignInClient
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(KEY.WEB_CLIENT_ID)
+                .requestEmail()
+                .build()
+            mGoogleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
+            mGoogleSignInClient.signOut().addOnSuccessListener {
+                startActivity(Intent(requireContext(), LoginActivity::class.java))
+            }
+        }
     }
 
     private fun startRecognition() {

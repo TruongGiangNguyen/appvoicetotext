@@ -72,10 +72,24 @@
                     android:background="@color/white"
                     android:src="@mipmap/ic_microphone" />
 
-
             </LinearLayout>
 
         </FrameLayout>
+
+        <com.shaishavgandhi.loginbuttons.GoogleButton
+            android:id="@+id/sign_out_gg"
+            android:layout_width="match_parent"
+            android:textAlignment="center"
+            app:roundedCorner="true"
+            app:iconCenterAligned="false"
+            app:iconSize="30dp"
+            android:text="Sign out Google"
+            android:layout_height="wrap_content"
+            app:transparentBackground="true"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/white"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="50dp"/>
 
     </RelativeLayout>
 

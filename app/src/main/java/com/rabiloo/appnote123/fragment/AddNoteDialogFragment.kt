@@ -23,6 +23,7 @@ import com.google.gson.Gson
 import com.kaopiz.kprogresshud.KProgressHUD
 import com.rabiloo.appnote123.R
 import com.rabiloo.appnote123.key.KEY
+import com.rabiloo.appnote123.listener.CallFunctionListener
 import com.rabiloo.appnote123.model.DetailNote
 import com.rabiloo.appnote123.model.Note
 import com.rabiloo.appnote123.network.utils.PCMFormat
@@ -122,6 +123,7 @@ class AddNoteDialogFragment : DialogFragment() {
     var cout = 0
     var checkDate = ""
     var noteAdd = ""
+    var isStop = true
     fun initView(view: View) {
         rl_back = view.findViewById(R.id.rl_back)
         val lp: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(
@@ -149,7 +151,8 @@ class AddNoteDialogFragment : DialogFragment() {
                     valueResponse = textWsAPI.result.hypotheses.last().transcript.trim()
                     CoroutineScope(Dispatchers.Main).launch {
                         edt_addNote.setText(valueResponse + "...")
-                        if (valueResponse == "ok"){
+                        if (valueResponse == "ok" && isStop){
+                            isStop = false
                             showProgress()
                             stop()
                             stopRecording()
@@ -383,11 +386,6 @@ class AddNoteDialogFragment : DialogFragment() {
             stopProgess()
             return
         }
-        if (noteAdd.isEmpty()){
-            stopProgess()
-            Toast.makeText(requireContext(), "Không có dữ liệu, vui lòng thử lại", Toast.LENGTH_LONG).show()
-            return
-        }
         if (checkDate == KEY.TOMORROW){
             upLoadFile(DateString.getDateTomorrow(), noteAdd)
         }else if (checkDate == KEY.DAYAFTERTOMORROR1 || checkDate == KEY.DAYAFTERTOMORROW){
@@ -490,7 +488,7 @@ class AddNoteDialogFragment : DialogFragment() {
         val detailNote: DetailNote = if (dateAdd == currentDate){
             DetailNote("", id, "",noteAdd, currentTime, noteDuration.toString(), downloadUri)
         }else{
-            DetailNote("", id, "",noteAdd, "--:--", noteDuration.toString(), downloadUri)
+            DetailNote("", id, currentDate,noteAdd, "--:--", noteDuration.toString(), downloadUri)
         }
         db.collection("DetailNote")
             .add(detailNote)
@@ -520,7 +518,7 @@ class AddNoteDialogFragment : DialogFragment() {
     }
 
     fun stopProgess(){
-        if (kProgressHUD.isShowing && dialog?.isShowing == true){
+        if (kProgressHUD.isShowing && dialog?.isShowing == true) {
             dialog?.dismiss()
             kProgressHUD.dismiss()
         }

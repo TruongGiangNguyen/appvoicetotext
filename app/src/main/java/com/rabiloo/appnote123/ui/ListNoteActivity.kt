@@ -54,10 +54,10 @@ class ListNoteActivity: AppCompatActivity(), ItemDetailNoteListener, CallFunctio
         super.onCreate(savedInstanceState)
         supportActionBar!!.hide()
 
-        val window = window;
+       /* val window = window;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.statusBarColor = Color.TRANSPARENT; }
+            window.statusBarColor = Color.TRANSPARENT; }*/
         setContentView(R.layout.activity_list_note)
         initView()
         getExTras()

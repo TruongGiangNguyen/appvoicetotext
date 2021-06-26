@@ -15,10 +15,6 @@ class Splashcreen: AppCompatActivity() {
         window.requestFeature(Window.FEATURE_ACTION_BAR)
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
-        val window = window;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.statusBarColor = Color.TRANSPARENT; }
 
         val currentUser = Firebase.auth.currentUser
 
