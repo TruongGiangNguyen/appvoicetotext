@@ -448,14 +448,14 @@ class DetailNoteDialogFragment: DialogFragment(), MediaPlayer.OnCompletionListen
                 bottomSheetDialog.dismiss()
             }
             AlertDialog.Builder(requireContext())
-                .setMessage("Are you sure you want to exit?")
+                .setMessage("Bạn muốn xóa ghi chú này?")
                 .setCancelable(false)
-                .setPositiveButton("Yes"
+                .setPositiveButton("Đồng ý"
                 ) { dialog, id ->
                     dialog.dismiss()
                     deleNote()
                 }
-                .setNegativeButton("No", null)
+                .setNegativeButton("Không", null)
                 .show()
 
         }

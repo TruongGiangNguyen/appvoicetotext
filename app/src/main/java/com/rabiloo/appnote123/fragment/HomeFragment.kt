@@ -30,12 +30,12 @@ import com.rabiloo.appnote123.adapter.home.AdapterNoteHome
 import com.rabiloo.appnote123.adapter.home.model.ModelItemHome
 import com.rabiloo.appnote123.datepickerdialog.DatePicker
 import com.rabiloo.appnote123.key.KEY
-import com.rabiloo.appnote123.listener.CallFunctionListener
 import com.rabiloo.appnote123.listener.ItemNoteHomeListener
 import com.rabiloo.appnote123.model.DetailNote
 import com.rabiloo.appnote123.model.Note
 import com.rabiloo.appnote123.ui.ListNoteActivity
 import com.rabiloo.appnote123.utils.DateString
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -122,10 +122,11 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
                     val note = document.toObject(Note::class.java)
                     val nameDayEL = DateString.getDayofWeek(note.date)
                     val date = "$nameDayEL, Ngày ${note.date}"
-                    val mItem = ModelItemHome(note.idNote, date, note.timeCreate, note.coutNote)
+                    val mItem = ModelItemHome(note.idNote, date, note.timeCreate, note.coutNote, note.date)
                     items.add(mItem)
                     Log.d("TAG", "${document.id} => ${document.data}")
                 }
+                sortDate()
                 if (!isSwipe){
                     initRecycler()
                 }else{
@@ -141,6 +142,33 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
     fun initSharedPreferences() {
         sharedPreferences = requireActivity().getSharedPreferences("GROUP", Context.MODE_PRIVATE)
         val nameGroup = sharedPreferences.getString("NAMEGROUP", "Group")
+    }
+
+    fun sortDate(){
+        items.sortWith(Comparator { item1, item2 ->
+            val date1 = stringToDate(item1.sortDate)
+            val date2 = stringToDate(item2.sortDate)
+            if (date1 != null && date2 != null) {
+                val b1: Boolean
+                val b2: Boolean
+                if (false) {
+                    b1 = date2.after(date1)
+                    b2 = date2.before(date1)
+                } else {
+                    b1 = date1.after(date2)
+                    b2 = date1.before(date2)
+                }
+                if (b1 != b2) {
+                    if (b1) {
+                        return@Comparator -1
+                    }
+                    if (!b1) {
+                        return@Comparator 1
+                    }
+                }
+            }
+            0
+        })
     }
 
     fun initRecycler() {
@@ -206,13 +234,19 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
     fun openDatePickerDialog() {
         val dateListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
             var monthNew = ""
+            var dayNew = ""
             var monthNormal = month + 1
             if (monthNormal < 10) {
                 monthNew = "0$monthNormal"
             } else {
                 monthNew = "$monthNormal"
             }
-            val date = "$dayOfMonth/$monthNew/$year"
+            if (dayOfMonth < 10) {
+                dayNew = "0$dayOfMonth"
+            } else {
+                dayNew = "$dayOfMonth"
+            }
+            val date = "$dayNew/$monthNew/$year"
             findDatePickerDialog(date)
             println("y = $year, m = $monthNew, d = $dayOfMonth")
         }
@@ -233,9 +267,10 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
                         val note = document.toObject(Note::class.java)
                         val nameDayEL = SimpleDateFormat("EEEE", Locale.getDefault()).format(Date(note.date))
                         val date = "$nameDayEL, Ngày ${note.date}"
-                        val mItem = ModelItemHome(note.idNote, date, note.timeCreate, note.coutNote)
+                        val mItem = ModelItemHome(note.idNote, date, note.timeCreate, note.coutNote, note.date)
                         items.add(mItem)
                     }
+                    sortDate()
                     adapter.setFind(true)
                     adapter.notifyDataSetChanged()
                 }
@@ -260,9 +295,9 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
 
     override fun deleteItem(id: String, position: Int) {
         AlertDialog.Builder(requireContext())
-            .setMessage("Are you sure you want to exit?")
+            .setMessage("Bạn muốn xóa ngày ghi chú này?")
             .setCancelable(false)
-            .setPositiveButton("Yes"
+            .setPositiveButton("Đồng ý"
             ) { dialog, idD ->
                 dialog.dismiss()
 
@@ -292,7 +327,7 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
                     Toast.makeText(requireContext(), "Xóa thất bại, vui lòng thử lại", Toast.LENGTH_LONG).show()
                 }
             }
-            .setNegativeButton("No", null)
+            .setNegativeButton("Không", null)
             .show()
     }
 
@@ -353,9 +388,10 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
                         val note = document.toObject(Note::class.java)
                         val nameDayEL = SimpleDateFormat("EEEE", Locale.getDefault()).format(Date(note.date))
                         val date = "$nameDayEL, Ngày ${note.date}"
-                        val mItem = ModelItemHome(note.idNote, date, note.timeCreate, note.coutNote)
+                        val mItem = ModelItemHome(note.idNote, date, note.timeCreate, note.coutNote, note.date)
                         items.add(mItem)
                     }
+                    sortDate()
                     adapter.setFind(true)
                     adapter.notifyDataSetChanged()
                 }
@@ -363,6 +399,18 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
             .addOnFailureListener { exception ->
                 Toast.makeText(requireContext(), "Dữ liệu tìm kiếm bị lỗi", Toast.LENGTH_LONG).show()
             }
+    }
+
+    fun stringToDate(strDate: String?): Date? {
+        if (strDate == null) return null
+        val format = SimpleDateFormat("dd/MM/yyyy")
+        var date: Date? = null
+        try {
+            date = format.parse(strDate)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return date
     }
 
 }

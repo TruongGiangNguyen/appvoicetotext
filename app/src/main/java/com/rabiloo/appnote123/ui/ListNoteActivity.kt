@@ -185,14 +185,14 @@ class ListNoteActivity: AppCompatActivity(), ItemDetailNoteListener, CallFunctio
 
     override fun deleItem(id: String, posi: Int) {
         AlertDialog.Builder(this)
-            .setMessage("Are you sure you want to exit?")
+            .setMessage("Bạn muốn xóa ghi chú này?")
             .setCancelable(false)
-            .setPositiveButton("Yes"
+            .setPositiveButton("Đồng ý"
             ) { dialog, idD ->
                 dialog.dismiss()
                 deleteNote(id, posi)
                }
-            .setNegativeButton("No", null)
+            .setNegativeButton("Không", null)
             .show()
     }
 

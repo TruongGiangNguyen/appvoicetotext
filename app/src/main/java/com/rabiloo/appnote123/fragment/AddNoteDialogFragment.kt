@@ -156,6 +156,7 @@ class AddNoteDialogFragment : DialogFragment() {
                             showProgress()
                             stop()
                             stopRecording()
+                            checkDateNote(checkDate, noteAdd)
                         }
                     }
                     if (cout == 3){
@@ -443,9 +444,9 @@ class AddNoteDialogFragment : DialogFragment() {
         noteDb.whereEqualTo("date", dateAdd).limit(1).get().addOnSuccessListener {
             if (it.isEmpty){
                 val note: Note = if (dateAdd == currentDate){
-                    Note("", dateAdd, currentTime, 0 )
+                    Note("", dateAdd, currentTime, 1 )
                 }else{
-                    Note("", dateAdd, "--:--", 0 )
+                    Note("", dateAdd, "--:--", 1 )
                 }
                 noteDb
                     .add(note)
@@ -518,9 +519,7 @@ class AddNoteDialogFragment : DialogFragment() {
     }
 
     fun stopProgess(){
-        if (kProgressHUD.isShowing && dialog?.isShowing == true) {
-            dialog?.dismiss()
-            kProgressHUD.dismiss()
-        }
+        dialog?.dismiss()
+        kProgressHUD.dismiss()
     }
 }
