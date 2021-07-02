@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.Window
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -15,6 +16,8 @@ class Splashcreen: AppCompatActivity() {
         window.requestFeature(Window.FEATURE_ACTION_BAR)
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
+
+        FirebaseApp.initializeApp(this);
 
         val currentUser = Firebase.auth.currentUser
 

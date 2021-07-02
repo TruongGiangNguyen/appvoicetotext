@@ -53,6 +53,7 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
 
     //SearchView
     lateinit var search_home: SearchBox
+    lateinit var search_view: SearchView
 
     //DatePickerDialog
     lateinit var datePicker: com.rabiloo.appnote123.datepickerdialog.DatePicker
@@ -98,6 +99,7 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
         recycler = view.findViewById(R.id.recycler)
         fab_record = view.findViewById(R.id.fab_record)
         swipeToRefresh = view.findViewById(R.id.swipeToRefresh)
+        search_view = view.findViewById(R.id.search_view)
         swipeToRefresh.setOnRefreshListener {
             isSwipe = true
             getData()
@@ -110,6 +112,19 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
         search_home.enableVoiceRecognition(this)
         search_home.setLogoText(getString(R.string.hint_search))
         search_home.setLogoTextColor(R.color.black)
+        search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // filter recycler view when query submitted
+                adapter.filter?.filter(query)
+                return false
+            }
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                // filter recycler view when text is changed
+                adapter.filter?.filter(query)
+                return false
+            }
+        })
     }
 
     fun getData() {
@@ -122,14 +137,15 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
                     val note = document.toObject(Note::class.java)
                     val nameDayEL = DateString.getDayofWeek(note.date)
                     val date = "$nameDayEL, Ngày ${note.date}"
-                    val mItem = ModelItemHome(note.idNote, date, note.timeCreate, note.coutNote, note.date)
+                    val mItem =
+                        ModelItemHome(note.idNote, date, note.timeCreate, note.coutNote, note.date)
                     items.add(mItem)
                     Log.d("TAG", "${document.id} => ${document.data}")
                 }
                 sortDate()
-                if (!isSwipe){
+                if (!isSwipe) {
                     initRecycler()
-                }else{
+                } else {
                     dataChangeRecy()
                 }
 
@@ -144,7 +160,7 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
         val nameGroup = sharedPreferences.getString("NAMEGROUP", "Group")
     }
 
-    fun sortDate(){
+    fun sortDate() {
         items.sortWith(Comparator { item1, item2 ->
             val date1 = stringToDate(item1.sortDate)
             val date2 = stringToDate(item2.sortDate)
@@ -172,18 +188,23 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
     }
 
     fun initRecycler() {
-        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        val layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         recycler.layoutManager = layoutManager
         adapter = AdapterNoteHome(requireContext(), items, this)
         recycler.adapter = adapter
     }
 
-    fun dataChangeRecy(){
+    fun dataChangeRecy() {
         adapter.notifyDataSetChanged()
         swipeToRefresh.isRefreshing = false
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 102 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             recordAudio()
@@ -259,15 +280,26 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
         val noteD = db.collection("Note")
         noteD.whereEqualTo("date", date).limit(1).get()
             .addOnSuccessListener { result ->
-                if (result.isEmpty){
-                    Toast.makeText(requireContext(), "Không có dữ liệu ngày $date", Toast.LENGTH_LONG).show()
-                }else{
+                if (result.isEmpty) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Không có dữ liệu ngày $date",
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
                     items.clear()
                     for (document in result) {
                         val note = document.toObject(Note::class.java)
-                        val nameDayEL = SimpleDateFormat("EEEE", Locale.getDefault()).format(Date(note.date))
+                        val nameDayEL =
+                            SimpleDateFormat("EEEE", Locale.getDefault()).format(Date(note.date))
                         val date = "$nameDayEL, Ngày ${note.date}"
-                        val mItem = ModelItemHome(note.idNote, date, note.timeCreate, note.coutNote, note.date)
+                        val mItem = ModelItemHome(
+                            note.idNote,
+                            date,
+                            note.timeCreate,
+                            note.coutNote,
+                            note.date
+                        )
                         items.add(mItem)
                     }
                     sortDate()
@@ -276,7 +308,8 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
                 }
             }
             .addOnFailureListener { exception ->
-                Toast.makeText(requireContext(), "Dữ liệu tìm kiếm bị lỗi", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Dữ liệu tìm kiếm bị lỗi", Toast.LENGTH_LONG)
+                    .show()
             }
     }
 
@@ -297,7 +330,8 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
         AlertDialog.Builder(requireContext())
             .setMessage("Bạn muốn xóa ngày ghi chú này?")
             .setCancelable(false)
-            .setPositiveButton("Đồng ý"
+            .setPositiveButton(
+                "Đồng ý"
             ) { dialog, idD ->
                 dialog.dismiss()
 
@@ -306,13 +340,13 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
                 val dNoteDb = db.collection("DetailNote")
 
                 dNote.document(id).delete().addOnCompleteListener {
-                    if (it.isSuccessful){
+                    if (it.isSuccessful) {
                         dNoteDb.whereEqualTo("idNote", id).get().addOnSuccessListener { result ->
-                            if (result.isEmpty){
+                            if (result.isEmpty) {
                                 items.removeAt(position)
                                 adapter.notifyItemRemoved(position);
                                 adapter.notifyItemRangeChanged(position, items.size);
-                            }else{
+                            } else {
                                 for (document in result) {
                                     val dNote = document.toObject(DetailNote::class.java)
                                     dNoteDb.document(dNote.idDetailNote).delete()
@@ -324,7 +358,11 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
                         }
                     }
                 }.addOnFailureListener {
-                    Toast.makeText(requireContext(), "Xóa thất bại, vui lòng thử lại", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Xóa thất bại, vui lòng thử lại",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
             .setNegativeButton("Không", null)
@@ -332,44 +370,49 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if ( requestCode === SearchBox.VOICE_RECOGNITION_CODE && resultCode === Activity.RESULT_OK) {
-            val matches: ArrayList<String> = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS) as ArrayList<String>
+        if (requestCode === SearchBox.VOICE_RECOGNITION_CODE && resultCode === Activity.RESULT_OK) {
+            val matches: ArrayList<String> =
+                data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS) as ArrayList<String>
             val text = matches[0]
             var d = ""
             var m = ""
-            if (text.contains("ngày") && text.contains("tháng") && text.contains("năm")){
+            if (text.contains("ngày") && text.contains("tháng") && text.contains("năm")) {
                 val day = DateString.getDayOrMonthYear(text, DateString.day)
                 val month = DateString.getDayOrMonthYear(text, DateString.month)
                 val year = DateString.getDayOrMonthYear(text, DateString.year)
-                if (day.toInt() < 10){
+                if (day.toInt() < 10) {
                     d = "0$day"
-                }else{
+                } else {
                     d = day
                 }
-                if (month.toInt() < 10){
+                if (month.toInt() < 10) {
                     m = "0$month"
-                }else{
+                } else {
                     m = month
                 }
                 val dayFull = DateString.getDateYear(d, m, year)
                 findVoiceYear(dayFull)
-            }else if (text.contains("ngày") && text.contains("tháng")){
+            } else if (text.contains("ngày") && text.contains("tháng")) {
                 val day = DateString.getDayOrMonthVoiceGG(text, DateString.day)
                 val month = DateString.getDayOrMonthVoiceGG(text, DateString.month)
-                if (day.toInt() < 10){
+                if (day.toInt() < 10) {
                     d = "0$day"
-                }else{
+                } else {
                     d = day
                 }
-                if (month.toInt() < 10){
+                if (month.toInt() < 10) {
                     m = "0$month"
-                }else{
+                } else {
                     m = month
                 }
                 val dayFull = DateString.getDate(d, m)
                 findVoiceYear(dayFull)
-            }else{
-                Toast.makeText(requireContext(), "Đầu vào không đúng, vui lòng thử lại", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Đầu vào không đúng, vui lòng thử lại",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
@@ -380,15 +423,26 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
         val noteD = db.collection("Note")
         noteD.whereEqualTo("date", dayFull).limit(1).get()
             .addOnSuccessListener { result ->
-                if (result.isEmpty){
-                    Toast.makeText(requireContext(), "Không có dữ liệu ngày $dayFull", Toast.LENGTH_LONG).show()
-                }else{
+                if (result.isEmpty) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Không có dữ liệu ngày $dayFull",
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
                     items.clear()
                     for (document in result) {
                         val note = document.toObject(Note::class.java)
-                        val nameDayEL = SimpleDateFormat("EEEE", Locale.getDefault()).format(Date(note.date))
+                        val nameDayEL =
+                            SimpleDateFormat("EEEE", Locale.getDefault()).format(Date(note.date))
                         val date = "$nameDayEL, Ngày ${note.date}"
-                        val mItem = ModelItemHome(note.idNote, date, note.timeCreate, note.coutNote, note.date)
+                        val mItem = ModelItemHome(
+                            note.idNote,
+                            date,
+                            note.timeCreate,
+                            note.coutNote,
+                            note.date
+                        )
                         items.add(mItem)
                     }
                     sortDate()
@@ -397,7 +451,8 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
                 }
             }
             .addOnFailureListener { exception ->
-                Toast.makeText(requireContext(), "Dữ liệu tìm kiếm bị lỗi", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Dữ liệu tìm kiếm bị lỗi", Toast.LENGTH_LONG)
+                    .show()
             }
     }
 

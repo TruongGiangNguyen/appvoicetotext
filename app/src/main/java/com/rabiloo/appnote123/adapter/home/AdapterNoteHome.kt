@@ -4,6 +4,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -11,8 +13,10 @@ import com.daimajia.swipe.SwipeLayout
 import com.rabiloo.appnote123.R
 import com.rabiloo.appnote123.adapter.home.model.ModelItemHome
 import com.rabiloo.appnote123.listener.ItemNoteHomeListener
+import com.rabiloo.appnote123.model.feature.Contact
 
-class AdapterNoteHome(val context: Context, val items: ArrayList<ModelItemHome>, val itemNoteHomeListener: ItemNoteHomeListener): RecyclerView.Adapter<AdapterNoteHome.ViewHodel>() {
+
+class AdapterNoteHome(val context: Context, var items: ArrayList<ModelItemHome>, val itemNoteHomeListener: ItemNoteHomeListener): RecyclerView.Adapter<AdapterNoteHome.ViewHodel>(), Filterable {
     class ViewHodel(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val swipe_home: SwipeLayout = itemView.findViewById(R.id.swipe_home)
 
@@ -23,7 +27,9 @@ class AdapterNoteHome(val context: Context, val items: ArrayList<ModelItemHome>,
         val txt_time_home: TextView = itemView.findViewById(R.id.txt_time_home)
     }
 
-    private var isFind = false;
+
+    private var isFind = false
+    private var itemsFilter: ArrayList<ModelItemHome> = items
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHodel {
         val view: View = LayoutInflater.from(context).inflate(R.layout.item_home, parent, false)
@@ -61,5 +67,35 @@ class AdapterNoteHome(val context: Context, val items: ArrayList<ModelItemHome>,
 
     override fun getItemCount(): Int {
         return items.size
+    }
+
+    override fun getFilter(): Filter? {
+        return object : Filter() {
+            override fun performFiltering(charSequence: CharSequence): FilterResults {
+                val charString = charSequence.toString()
+                if (charString.isEmpty()) {
+                    items = itemsFilter
+                } else {
+                    val filteredList: ArrayList<ModelItemHome> = ArrayList()
+                    for (row in itemsFilter) {
+
+                        // name match condition. this might differ depending on your requirement
+                        // here we are looking for name or phone number match
+                        if (row.date.toLowerCase().contains(charString.toLowerCase()) || row.date.contains(charSequence)) {
+                            filteredList.add(row)
+                        }
+                    }
+                    items = filteredList
+                }
+                val filterResults = FilterResults()
+                filterResults.values = items
+                return filterResults
+            }
+
+            override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
+                items = filterResults.values as ArrayList<ModelItemHome>
+                notifyDataSetChanged()
+            }
+        }
     }
 }
