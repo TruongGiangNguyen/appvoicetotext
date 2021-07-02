@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity() {
 
         initView()
         configViewPager()
-        test()
     }
 
     fun initView() {
@@ -41,8 +40,6 @@ class MainActivity : AppCompatActivity() {
 
     fun configViewPager() {
         floating_top_bar_navigation.setTypeface(Typeface.createFromAsset(assets, "rubik.ttf"))
-        /*floating_top_bar_navigation.setBadgeValue(0, "")
-        floating_top_bar_navigation.setBadgeValue(1, "") //invisible badge*/
 
         val fragList = ArrayList<Fragment>()
         fragList.add(HomeFragment())
@@ -51,10 +48,6 @@ class MainActivity : AppCompatActivity() {
 
         val pagerAdapter = FragmentSlidePagerAdapter(fragList, supportFragmentManager)
         view_pager.adapter = pagerAdapter
-        //disble swipe
-        /*view_pager.setOnTouchListener { _, _ ->
-            return@setOnTouchListener true
-        }*/
 
         //swipe
         view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -79,26 +72,6 @@ class MainActivity : AppCompatActivity() {
         floating_top_bar_navigation.setNavigationChangeListener { _, position ->
             view_pager.setCurrentItem(position, true)
         }
-    }
-
-    fun test(){
-        /*val str = "ngày 25 tháng 6 năm 2021"
-        val day = DateString.getDayOrMonthYear(str, DateString.day)
-        val month = DateString.getDayOrMonthYear(str, DateString.month)
-        val year = DateString.getDayOrMonthYear(str, DateString.year)
-       *//* val date = DateString.getDate(day, month)
-        val dayOfWeek = DateString.getDayofWeek(date)*//*
-        val dayFull = DateString.getDateYear(day, month, year)
-        println(dayFull)*/
-       /* val str = "ngày 1 tháng 6"
-        val day = DateString.getDayOrMonthVoiceGG(str, DateString.day)
-        val month = DateString.getDayOrMonthVoiceGG(str, DateString.month)
-        val dayFull = DateString.getDate(day, month)
-        if (day.toInt() < 10){
-            val d = "0$day"
-            println(d)
-        }*/
-
     }
 
 }

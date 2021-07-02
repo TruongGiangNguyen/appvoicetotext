@@ -78,9 +78,6 @@ class AdapterNoteHome(val context: Context, var items: ArrayList<ModelItemHome>,
                 } else {
                     val filteredList: ArrayList<ModelItemHome> = ArrayList()
                     for (row in itemsFilter) {
-
-                        // name match condition. this might differ depending on your requirement
-                        // here we are looking for name or phone number match
                         if (row.date.toLowerCase().contains(charString.toLowerCase()) || row.date.contains(charSequence)) {
                             filteredList.add(row)
                         }

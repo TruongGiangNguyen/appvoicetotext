@@ -35,9 +35,6 @@ class AudioRecorder(val context: Context) {
         recorder.setOutputFile(path)
         recorder.prepare()
         recorder.start()
-        /*if (File(path).length().toInt() > 0){
-            client.recognize(File(path))
-        }*/
     }
     @Throws(IOException::class)
     fun createPath(): String{

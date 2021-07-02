@@ -5,8 +5,6 @@ plugins {
     id 'kotlin-kapt'
     id 'realm-android'
     id 'com.google.gms.google-services'
-
-
 }
 android {
     compileSdkVersion 30
@@ -117,13 +115,11 @@ dependencies {
     //Audio visualizer
     implementation 'com.github.Armen101:AudioRecordView:1.0.5'
     //Search view
-//    implementation 'com.quinny898.library.persistentsearch:library:1.1.0-SNAPSHOT'
     implementation project(path: ':librarysearch')
     //Feature app
     implementation 'com.github.zagum:SpeechRecognitionView:1.2.2'
     implementation 'com.andrognito.flashbar:flashbar:1.0.2'
     implementation 'com.github.KwabenBerko:OpenWeatherMap-Android-Library:2.0.1'
-//    implementation project(path: ':pocketsphinx-android-5prealpha-release')
     implementation 'com.github.timigod:android-chat-ui:v0.1.4'
 
 }

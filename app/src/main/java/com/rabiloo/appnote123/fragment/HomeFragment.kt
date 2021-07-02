@@ -44,20 +44,15 @@ import kotlin.collections.ArrayList
 class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
     //RecyclerView
     lateinit var recycler: RecyclerView
-
     //Add member
     lateinit var fab_record: FloatingActionButton
-
     //Sharepreferences
     lateinit var sharedPreferences: SharedPreferences
-
     //SearchView
     lateinit var search_home: SearchBox
     lateinit var search_view: SearchView
-
     //DatePickerDialog
-    lateinit var datePicker: com.rabiloo.appnote123.datepickerdialog.DatePicker
-
+    lateinit var datePicker: DatePicker
     //Caculate
     lateinit var calendar_home: ImageView
     lateinit var swipeToRefresh: SwipeRefreshLayout
@@ -81,16 +76,6 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
         initView(view)
         configSearchView()
         getData()
-//        initSharedPreferences()
-        /* val firstTime = sharedPreferences.getBoolean("firstapp", true)
-         if (firstTime) {
-             val editor: SharedPreferences.Editor = sharedPreferences!!.edit()
-             editor.putBoolean("firstapp", false)
-             editor.commit()
-         }*/
-
-        /* val newFragment: DialogFragment = DetailNoteDialogFragment.newInstance()
-         newFragment.show(requireActivity().supportFragmentManager, "dialog")*/
     }
 
     fun initView(view: View) {
@@ -153,11 +138,6 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
             .addOnFailureListener { exception ->
                 Toast.makeText(requireContext(), "Dữ liệu lấy về bị lỗi", Toast.LENGTH_LONG).show()
             }
-    }
-
-    fun initSharedPreferences() {
-        sharedPreferences = requireActivity().getSharedPreferences("GROUP", Context.MODE_PRIVATE)
-        val nameGroup = sharedPreferences.getString("NAMEGROUP", "Group")
     }
 
     fun sortDate() {

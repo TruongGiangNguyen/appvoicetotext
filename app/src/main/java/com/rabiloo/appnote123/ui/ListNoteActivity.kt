@@ -35,10 +35,11 @@ import io.netty.handler.codec.http.websocketx.WebSocketFrame
 import java.io.*
 
 
-class ListNoteActivity: AppCompatActivity(), ItemDetailNoteListener, CallFunctionListener {
-    companion object{
+class ListNoteActivity : AppCompatActivity(), ItemDetailNoteListener, CallFunctionListener {
+    companion object {
         var dateNote = ""
     }
+
     //Recycler
     lateinit var recy_listNote: RecyclerView
     var itemNotes: ArrayList<ModelItemNote> = ArrayList()
@@ -54,18 +55,12 @@ class ListNoteActivity: AppCompatActivity(), ItemDetailNoteListener, CallFunctio
         super.onCreate(savedInstanceState)
         supportActionBar!!.hide()
 
-       /* val window = window;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.statusBarColor = Color.TRANSPARENT; }*/
         setContentView(R.layout.activity_list_note)
         initView()
         getExTras()
-        /*val newFragment: DialogFragment = DetailNoteDialogFragment.newInstance()
-        newFragment.show(supportFragmentManager, "dialog")*/
     }
 
-    fun getExTras(){
+    fun getExTras() {
         val bundle = intent.extras
         idNote = bundle?.getString(KEY.ID).toString()
         dateNote = bundle?.getString(KEY.DATE).toString()
@@ -74,69 +69,32 @@ class ListNoteActivity: AppCompatActivity(), ItemDetailNoteListener, CallFunctio
         getDataDetailNote(idNote)
     }
 
-   fun getDataDetailNote(idNote: String?) {
-       itemNotes.clear()
-       val db = Firebase.firestore
-       val detailNoteDB = db.collection("DetailNote")
-       detailNoteDB.whereEqualTo("idNote", idNote).get()
-           .addOnSuccessListener { result ->
-               for (document in result) {
-                   val dNote = document.toObject(DetailNote::class.java)
-                   val iNote = ModelItemNote(dNote.idDetailNote, dNote.dateFeature, dNote.time, dNote.note, dNote.durationRecord, dNote.downloadUri)
-                   itemNotes.add(iNote)
-               }
-               initRecycler()
-           }
-           .addOnFailureListener { exception ->
-               Toast.makeText(this, "Dữ liệu lấy về bị lỗi", Toast.LENGTH_LONG).show()
-           }
-   }
-
-    fun testWebsocket(){
-        val handler: IResponseHandler<WebSocketFrame?> = object : IResponseHandler<WebSocketFrame?> {
-            override fun onMessage(msg: WebSocketFrame?) {
-                if (msg is TextWebSocketFrame) {
-                    val textFrame = msg as TextWebSocketFrame
-                    Log.i("WEBSOCKET", "Json ${textFrame.text()}")
-                } else {
-                    Log.i("WEBSOCKET", "No Json ${msg.toString()}")
+    fun getDataDetailNote(idNote: String?) {
+        itemNotes.clear()
+        val db = Firebase.firestore
+        val detailNoteDB = db.collection("DetailNote")
+        detailNoteDB.whereEqualTo("idNote", idNote).get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    val dNote = document.toObject(DetailNote::class.java)
+                    val iNote = ModelItemNote(
+                        dNote.idDetailNote,
+                        dNote.dateFeature,
+                        dNote.time,
+                        dNote.note,
+                        dNote.durationRecord,
+                        dNote.downloadUri
+                    )
+                    itemNotes.add(iNote)
                 }
+                initRecycler()
             }
-
-            override fun onFailure(cause: Throwable?) {
-                Log.i("WEBSOCKET", "Fail - ${cause?.message.toString()}")
+            .addOnFailureListener { exception ->
+                Toast.makeText(this, "Dữ liệu lấy về bị lỗi", Toast.LENGTH_LONG).show()
             }
-
-            override fun onComplete() {
-                Log.i("WEBSOCKET", "completed")
-            }
-
-        }
-
-        val am: AssetManager = this.assets
-        val inputStream = am.open("audio1.mp3")
-        try{
-            val bi: BufferedInputStream = BufferedInputStream(inputStream)
-            val client = AsrWebSocketClient.newBuilder()
-                .setSampleRate(16000f)
-                .setAudioFormat(PCMFormat.S16LE)
-                .setChannels(1)
-                .setHandler(handler)
-                .setToken(KEY.TOKEN_WEBSOCKET)
-                .setUrl(KEY.URL_WEBSOCKET_API)
-                .build()
-            client.recognize(bi)
-        }catch (e: Exception){
-            Log.i("TAG", e.message.toString())
-        }
     }
 
-    fun getURLForResource(resourceId: Int): Uri? {
-        //use BuildConfig.APPLICATION_ID instead of R.class.getPackage().getName() if both are not same
-        return Uri.parse("android.resource://" + R::class.java.getPackage().name + "/" + resourceId)
-    }
-
-    fun initView(){
+    fun initView() {
         recy_listNote = findViewById(R.id.recy_listNote)
         title_date_listNote = findViewById(R.id.title_date_listNote)
         back_listNote = findViewById(R.id.back_listNote)
@@ -145,7 +103,7 @@ class ListNoteActivity: AppCompatActivity(), ItemDetailNoteListener, CallFunctio
         }
     }
 
-    fun initRecycler(){
+    fun initRecycler() {
         recy_listNote.layoutManager = StaggeredGridLayoutManager(
             2,
             StaggeredGridLayoutManager.VERTICAL
@@ -178,8 +136,15 @@ class ListNoteActivity: AppCompatActivity(), ItemDetailNoteListener, CallFunctio
         recy_listNote.adapter = adapter
     }
 
-    override fun openDialogDetail(id: String, time: String, date: String, note: String, downLoadUri: String) {
-        val newFragment: DialogFragment = DetailNoteDialogFragment.newInstance(id, time, date, note, downLoadUri)
+    override fun openDialogDetail(
+        id: String,
+        time: String,
+        date: String,
+        note: String,
+        downLoadUri: String
+    ) {
+        val newFragment: DialogFragment =
+            DetailNoteDialogFragment.newInstance(id, time, date, note, downLoadUri)
         newFragment.show(supportFragmentManager, "dialog")
     }
 
@@ -187,11 +152,12 @@ class ListNoteActivity: AppCompatActivity(), ItemDetailNoteListener, CallFunctio
         AlertDialog.Builder(this)
             .setMessage("Bạn muốn xóa ghi chú này?")
             .setCancelable(false)
-            .setPositiveButton("Đồng ý"
+            .setPositiveButton(
+                "Đồng ý"
             ) { dialog, idD ->
                 dialog.dismiss()
                 deleteNote(id, posi)
-               }
+            }
             .setNegativeButton("Không", null)
             .show()
     }
@@ -201,7 +167,7 @@ class ListNoteActivity: AppCompatActivity(), ItemDetailNoteListener, CallFunctio
         val dNoteDb = db.collection("DetailNote")
         val dNote = db.collection("Note")
         dNoteDb.document(id).delete().addOnCompleteListener {
-            if (it.isSuccessful){
+            if (it.isSuccessful) {
                 val cout = coutNote - 1
                 dNote.document(idNote).update("coutNote", cout)
                 Toast.makeText(this, "Xóa thành công", Toast.LENGTH_LONG).show()
@@ -223,10 +189,17 @@ class ListNoteActivity: AppCompatActivity(), ItemDetailNoteListener, CallFunctio
             .addOnSuccessListener { result ->
                 for (document in result) {
                     val dNote = document.toObject(DetailNote::class.java)
-                    val iNote = ModelItemNote(dNote.idDetailNote, dNote.dateFeature, dNote.time, dNote.note, dNote.durationRecord, dNote.downloadUri)
+                    val iNote = ModelItemNote(
+                        dNote.idDetailNote,
+                        dNote.dateFeature,
+                        dNote.time,
+                        dNote.note,
+                        dNote.durationRecord,
+                        dNote.downloadUri
+                    )
                     itemNotes.add(iNote)
                 }
-               adapter.notifyDataSetChanged()
+                adapter.notifyDataSetChanged()
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Dữ liệu lấy về bị lỗi", Toast.LENGTH_LONG).show()

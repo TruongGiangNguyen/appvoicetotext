@@ -183,14 +183,6 @@ class AddNoteDialogFragment : DialogFragment() {
                 Log.d("WEBSOCKET", "completed")
             }
         }
-        /*val client = AsrWebSocketClient.newBuilder()
-            .setSampleRate(16000f)
-            .setAudioFormat(PCMFormat.S16LE)
-            .setHandler(handler)
-            .setChannels(1)
-            .setToken(KEY.TOKEN)
-            .setUrl(KEY.URL_WEBSOCKET_API)
-            .build()*/
         rl_back.setOnClickListener {
             dialog?.dismiss()
         }
@@ -315,30 +307,6 @@ class AddNoteDialogFragment : DialogFragment() {
     fun updateTimeDate() {
         currentDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
         val nameDayEL = SimpleDateFormat("EEEE", Locale.getDefault()).format(Date())
-        val nameDayVN = when (nameDayEL) {
-            "Monday" -> {
-                "Thứ hai"
-            }
-            "Tuesday" -> {
-                "Thứ ba"
-            }
-            "Wednesday" -> {
-                "Thứ tư"
-            }
-            "Thursday" -> {
-                "Thứ năm"
-            }
-            "Friday" -> {
-                "Thứ sáu"
-            }
-            "Saturday" -> {
-                "Thứ bảy"
-            }
-            "Sunday" -> {
-                "Chủ nhật"
-            }
-            else -> ""
-        }
         currentTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
         title_timeDate.text = "$currentTime, $nameDayEL $currentDate"
     }

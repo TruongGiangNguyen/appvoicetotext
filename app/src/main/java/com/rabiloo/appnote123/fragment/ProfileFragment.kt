@@ -140,6 +140,7 @@ class ProfileFragment : Fragment() {
             mGoogleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
             mGoogleSignInClient.signOut().addOnSuccessListener {
                 startActivity(Intent(requireContext(), LoginActivity::class.java))
+                requireActivity().finish()
             }
         }
     }

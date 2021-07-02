@@ -29,24 +29,15 @@ import com.rabiloo.appnote123.utils.SharedPer
 class LoginActivity : AppCompatActivity() {
     //Button login
     lateinit var login_gg: Button
-
     //GoogleSignIn
     lateinit var googleSignInClient: GoogleSignInClient
-
     //Firebase Auth
     private lateinit var auth: FirebaseAuth
-
     //Spin
     lateinit var spin: SpinKitView
 
     override fun onStart() {
         super.onStart()
-        /*// Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth.currentUser
-        currentUser?.let {
-            Log.i("LOGIN-SINGED", currentUser.toString())
-            intent()
-        }*/
     }
 
     @SuppressLint("ResourceAsColor")
@@ -58,7 +49,6 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         // Initialize Firebase Auth
         auth = Firebase.auth
-
         initView()
         loginGG()
 
@@ -97,10 +87,6 @@ class LoginActivity : AppCompatActivity() {
     fun loginGG() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(KEY.WEB_CLIENT_ID)
-//            .requestScopes(Drive.SCOPE_FILE)
-////            .requestScopes(Scope(YouTubeScopes.YOUTUBE_UPLOAD))
-////            .requestScopes(Scope(YouTubeScopes.YOUTUBE))
-////            .requestScopes(Scope(YouTubeScopes.YOUTUBE_READONLY))
             .requestEmail()
             .build()
 
@@ -145,7 +131,6 @@ class LoginActivity : AppCompatActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("TAG", "signInWithCredential:success")
                     val user = auth.currentUser
-//                    val url_Image = user.photoUrl
                     val email = user.email
                     SharedPer.saveEmail(email, baseContext)
                     intent()
