@@ -412,9 +412,9 @@ class AddNoteDialogFragment : DialogFragment() {
         noteDb.whereEqualTo("date", dateAdd).limit(1).get().addOnSuccessListener {
             if (it.isEmpty){
                 val note: Note = if (dateAdd == currentDate){
-                    Note("", dateAdd, currentTime, 1 )
+                    Note("", dateAdd, currentTime, 1, SharedPer.getEmail(requireContext()))
                 }else{
-                    Note("", dateAdd, "--:--", 1 )
+                    Note("", dateAdd, "--:--", 1, SharedPer.getEmail(requireContext()))
                 }
                 noteDb
                     .add(note)

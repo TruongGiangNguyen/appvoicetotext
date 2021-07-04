@@ -5,15 +5,17 @@ public class Note {
     String date;
     String timeCreate;
     int coutNote;
+    String email;
 
     public Note() {
     }
 
-    public Note(String idNote, String date, String timeCreate, int coutNote) {
+    public Note(String idNote, String date, String timeCreate, int coutNote, String email) {
         this.idNote = idNote;
         this.date = date;
         this.timeCreate = timeCreate;
         this.coutNote = coutNote;
+        this.email = email;
     }
 
     public String getIdNote() {
@@ -46,5 +48,13 @@ public class Note {
 
     public void setCoutNote(int coutNote) {
         this.coutNote = coutNote;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

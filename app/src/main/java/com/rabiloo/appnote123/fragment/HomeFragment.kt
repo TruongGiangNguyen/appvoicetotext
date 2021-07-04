@@ -35,6 +35,7 @@ import com.rabiloo.appnote123.model.DetailNote
 import com.rabiloo.appnote123.model.Note
 import com.rabiloo.appnote123.ui.ListNoteActivity
 import com.rabiloo.appnote123.utils.DateString
+import com.rabiloo.appnote123.utils.SharedPer
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -116,7 +117,7 @@ class HomeFragment : Fragment(), View.OnClickListener, ItemNoteHomeListener {
         items.clear()
         val db = Firebase.firestore
         val noteDB = db.collection("Note")
-        noteDB.get()
+        noteDB.whereEqualTo("email", SharedPer.getEmail(requireContext())).get()
             .addOnSuccessListener { result ->
                 for (document in result) {
                     val note = document.toObject(Note::class.java)
